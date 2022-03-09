@@ -1,0 +1,15 @@
+[[source]]
+url="https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+python-dotenv = "*"
+psycopg2-binary = "*"
+configparser = "*"
+py-cord = "==2.0.0b5"
+bs4 = "*"
+requests = "*"
+urllib3 = "*"
+
+[dev-packages]
