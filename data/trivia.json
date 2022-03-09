@@ -1,0 +1,1512 @@
+[
+    {
+        "question": "What is the name for the Jewish New Year?",
+        "answers": [
+            "Hanukkah",
+            "Yom Kippur",
+            "Kwanza",
+            "Rosh Hashanah"
+        ],
+        "answer": "Rosh Hashanah"
+    },
+    {
+        "question": " How many blue stripes are there on the U.S. flag?",
+        "answers": [
+            "6",
+            "7",
+            "13",
+            "0"
+        ],
+        "answer": "0"
+    },
+    {
+        "question": " Which one of these characters is not friends with Harry Potter?",
+        "answers": [
+            "Ron Weasley",
+            "Neville Longbottom",
+            "Draco Malfoy",
+            "Hermione Granger"
+        ],
+        "answer": "Draco Malfoy"
+    },
+    {
+        "question": " What is the color of Donald Duck\u2019s bowtie?",
+        "answers": [
+            "Red",
+            "Yellow",
+            "Blue",
+            "White"
+        ],
+        "answer": "Red"
+    },
+    {
+        "question": " What was the name of the band Lionel Richie was a part of?",
+        "answers": [
+            "King Harvest",
+            "Spectrums",
+            "Commodores",
+            "The Marshall Tucker Band"
+        ],
+        "answer": "Commodores"
+    },
+    {
+        "question": " Which animal does not appear in the Chinese zodiac?",
+        "answers": [
+            "Dragon",
+            "Rabbit",
+            "Dog",
+            "Hummingbird"
+        ],
+        "answer": "Hummingbird"
+    },
+    {
+        "question": " Which country held the 2016 Summer Olympics?",
+        "answers": [
+            "China",
+            "Ireland",
+            "Brazil",
+            "Italy"
+        ],
+        "answer": "Brazil"
+    },
+    {
+        "question": " Which planet is the hottest?",
+        "answers": [
+            "Venus",
+            "Saturn",
+            "Mercury",
+            "Mars"
+        ],
+        "answer": "Venus"
+    },
+    {
+        "question": " Who was the only U.S. President to resign?",
+        "answers": [
+            "Herbert Hoover",
+            "Richard Nixon",
+            "George W. Bush",
+            "Barack Obama"
+        ],
+        "answer": "Nixon"
+    },
+    {
+        "question": " What does the \u201cD\u201d in \u201cD-Day\u201d stand for?",
+        "answers": [
+            "Dooms",
+            "Dark",
+            "Day ",
+            "Dunkirk"
+        ],
+        "answer": "Day"
+    },
+    {
+        "question": " In which city can you find the Liberty Bell?",
+        "answers": [
+            "Washington, D.C.",
+            "Boston",
+            "Philadelphia",
+            "Manhattan "
+        ],
+        "answer": "Philadelphia"
+    },
+    {
+        "question": " In Pirates of the Caribbean, what was Captain Jack Sparrow\u2019s ship\u2019s name?",
+        "answers": [
+            "The Marauder",
+            "The Black Pearl",
+            "The Black Python",
+            "The Slytherin"
+        ],
+        "answer": "The Black Pearl"
+    },
+    {
+        "question": " According to Forrest Gump, \u201clife was like\u2026\u201d",
+        "answers": [
+            "A bag of lemons",
+            "A handful of roses",
+            "A lollipop",
+            "A box of chocolates"
+        ],
+        "answer": "A box of chocolates"
+    },
+    {
+        "question": " Linda and Bob from Bob\u2019s Burgers have 3 kids. Which one of these characters is not one of them?",
+        "answers": [
+            "Louise",
+            "Gene",
+            "Jimmy",
+            "Tina"
+        ],
+        "answer": "Jimmy"
+    },
+    {
+        "question": " The British band One Direction (rip) was made up of Harry, Louis, Niall, Zayn, and\u2026",
+        "answers": [
+            "Paul",
+            "Callum",
+            "Kevin",
+            "Liam"
+        ],
+        "answer": "Liam"
+    },
+    {
+        "question": " What is the rarest blood type?",
+        "answers": [
+            "O",
+            "A",
+            "B",
+            "AB-Negative"
+        ],
+        "answer": "AB-Negative"
+    },
+    {
+        "question": " Holly Golightly is a character in which film?",
+        "answers": [
+            "Breakfast at Tiffanys",
+            "Pretty In Pink",
+            "Funny Face",
+            "Singing In The Rain"
+        ],
+        "answer": "Breakfast at Tiffanys"
+    },
+    {
+        "question": " In The Wizard of Oz, the Tin Man wanted to see the Wizard about getting\u2026",
+        "answers": [
+            "A brain",
+            "An oil can",
+            "A dog",
+            "A heart"
+        ],
+        "answer": "A heart"
+    },
+    {
+        "question": " Which U.S. state is known as the sunflower state?",
+        "answers": [
+            "Florida",
+            "California",
+            "Maine",
+            "Kansas"
+        ],
+        "answer": "Kansas"
+    },
+    {
+        "question": " Which one of these characters isn\u2019t a part of the Friends group?",
+        "answers": [
+            "Rachel",
+            "Joey",
+            "Gunther",
+            "Monica"
+        ],
+        "answer": "Gunther"
+    },
+    {
+        "question": " How many bones are there in the human body?",
+        "answers": [
+            "206",
+            "205",
+            "201",
+            "209"
+        ],
+        "answer": "206"
+    },
+    {
+        "question": " Which famous singer released a song called \u201cAdore You\u201d?",
+        "answers": [
+            "Harry Styles",
+            "Dua Lipa",
+            "Halsey",
+            "Shawn Mendes"
+        ],
+        "answer": "Harry Styles"
+    },
+    {
+        "question": " Fe is the chemical symbol for\u2026",
+        "answers": [
+            "Zinc",
+            "Hydrogen",
+            "Fluorine",
+            "Iron"
+        ],
+        "answer": "Iron"
+    },
+    {
+        "question": " How old do you have to be to enter the hunger games?",
+        "answers": [
+            "12",
+            "11",
+            "10",
+            "15"
+        ],
+        "answer": "12"
+    },
+    {
+        "question": " What language is the most spoken worldwide?",
+        "answers": [
+            "Chinese",
+            "Spanish",
+            "Arabic",
+            "English"
+        ],
+        "answer": "Chinese"
+    },
+    {
+        "question": " What year did Barbie come out?",
+        "answers": [
+            "1958",
+            "1959",
+            "1956",
+            "1961"
+        ],
+        "answer": "1959"
+    },
+    {
+        "question": " What is Shakespeare\u2019s shortest tragedy?",
+        "answers": [
+            "Macbeth",
+            "Hamlet",
+            "Romeo & Juliet",
+            "Othello"
+        ],
+        "answer": "Macbeth"
+    },
+    {
+        "question": " What is the #1 cookie in the U.S.?",
+        "answers": [
+            "Chips Ahoy!",
+            "Milano",
+            "Girl Scout Thin Mints",
+            "Oreo"
+        ],
+        "answer": "Oreo"
+    },
+    {
+        "question": " How many hearts does an octopus have?",
+        "answers": [
+            "1",
+            "2",
+            "3",
+            "4"
+        ],
+        "answer": "3"
+    },
+    {
+        "question": " Who wrote The Scarlett Letter?",
+        "answers": [
+            "Shakespeare",
+            "Stephen King",
+            "Nathanial Hawthorne",
+            "Ernest Hemingway"
+        ],
+        "answer": "Nathanial Hawthorne"
+    },
+    {
+        "question": " Which social media platform came out in 2003?",
+        "answers": [
+            "Myspace",
+            "Twitter",
+            "Facebook",
+            "Tumblr"
+        ],
+        "answer": "Myspace"
+    },
+    {
+        "question": " Which planet in our solar system is the largest?",
+        "answers": [
+            "Jupiter",
+            "Saturn",
+            "Neptune",
+            "Earth"
+        ],
+        "answer": "Jupiter"
+    },
+    {
+        "question": " The Powerpuff Girls are 3 distinct colors. What are they?",
+        "answers": [
+            "Red, yellow, green",
+            "Yellow, blue, green",
+            "Blue, green, red",
+            "Green, purple, orange"
+        ],
+        "answer": "Blue, green, red"
+    },
+    {
+        "question": " Which boyband sings the song \u201cI Want It That Way\u201d?",
+        "answers": [
+            "One Direction",
+            "Backstreet Boys",
+            "NSYNC",
+            "New Kids On The Block"
+        ],
+        "answer": "Backstreet Boys"
+    },
+    {
+        "question": " Who painted the Sistine Chapel ceiling?",
+        "answers": [
+            "Picasso",
+            "Da Vinci",
+            "Michelangelo",
+            "Van Gogh"
+        ],
+        "answer": "Michelangelo"
+    },
+    {
+        "question": " In which state did the Salem Witch Trials take place?",
+        "answers": [
+            "Washington",
+            "Virginia",
+            "Massachusetts",
+            "Pennsylvania"
+        ],
+        "answer": "Massachusetts"
+    },
+    {
+        "question": " Which ocean is the largest?",
+        "answers": [
+            "Indian",
+            "Pacific",
+            "Atlantic",
+            "Arctic"
+        ],
+        "answer": "Pacific"
+    },
+    {
+        "question": " Which New York City building is the tallest:",
+        "answers": [
+            "Empire State Building",
+            "Bank of America Tower",
+            "One World Trade Center",
+            "Statue of Liberty"
+        ],
+        "answer": "World Trade Center"
+    },
+    {
+        "question": " What does the \u201cE\u201d in Chuck E. Cheese stand for?",
+        "answers": [
+            "Ernest",
+            "Edward",
+            "Entertainment",
+            "Extra"
+        ],
+        "answer": "Entertainment"
+    },
+    {
+        "question": " Which country gifted the Statue of Liberty to the U.S.?",
+        "answers": [
+            "Germany",
+            "China",
+            "France",
+            "Italy"
+        ],
+        "answer": "France"
+    },
+    {
+        "question": " Who painted the Mona Lisa?",
+        "answers": [
+            "Van Gogh",
+            "Da Vinci",
+            "Picasso",
+            "Monet"
+        ],
+        "answer": "Da Vinci"
+    },
+    {
+        "question": " In which city were Anne Frank and her family in hiding?",
+        "answers": [
+            "Paris",
+            "Amsterdam",
+            "Brussels",
+            "Frankfurt"
+        ],
+        "answer": "Amsterdam"
+    },
+    {
+        "question": " There are 4 best friends on the TV show Pretty Little Liars: Hanna, Emily, Aria, and\u2026",
+        "answers": [
+            "Mona",
+            "Charlie",
+            "Alison",
+            "Spencer"
+        ],
+        "answer": "Spencer"
+    },
+    {
+        "question": " In which decade does the Netflix series Stranger Things take place?",
+        "answers": [
+            "The \u201870s",
+            "The \u201880s",
+            "The \u201890s",
+            "The early 2000s"
+        ],
+        "answer": "The \u201980s"
+    },
+    {
+        "question": " Which country consumes the most chocolate?",
+        "answers": [
+            "Spain",
+            "Germany",
+            "North America",
+            "Switzerland"
+        ],
+        "answer": "Switzerland"
+    },
+    {
+        "question": " What is Sodium Chloride?",
+        "answers": [
+            "Salt",
+            "Sugar",
+            "Chlorine",
+            "Bleach"
+        ],
+        "answer": "Salt"
+    },
+    {
+        "question": " Which astrological sign is a crab?",
+        "answers": [
+            "Pisces",
+            "Aquarius",
+            "Cancer",
+            "Virgo"
+        ],
+        "answer": "Cancer"
+    },
+    {
+        "question": " In the Bible, how does the Virgin Mary learn of her pregnancy with baby Jesus?",
+        "answers": [
+            "God tells her",
+            "The angel Gabriel tells her",
+            "She has a dream about it",
+            "A doctor tells her"
+        ],
+        "answer": "The angel Gabriel tells her"
+    },
+    {
+        "question": " Who, in the Harry Potter series, is Tom Riddle?",
+        "answers": [
+            "A student in Harry\u2019s class",
+            "A professor at Hogwarts",
+            "Harry\u2019s birth father",
+            "Voldemort"
+        ],
+        "answer": "Voldemort"
+    },
+    {
+        "question": " The movie The Social Network is about which social media platform:",
+        "answers": [
+            "Facebook",
+            "Myspace",
+            "Instagram",
+            "Twitter"
+        ],
+        "answer": "Facebook"
+    },
+    {
+        "question": " Who wrote the songs for The Lion King? ",
+        "answers": [
+            "Elton John",
+            "Phil Collins",
+            "Celine Dion",
+            "Stevie Wonder"
+        ],
+        "answer": "Elton John"
+    },
+    {
+        "question": " How many daughters does Barack Obama have?",
+        "answers": [
+            "0",
+            "1",
+            "2",
+            "3"
+        ],
+        "answer": "2"
+    },
+    {
+        "question": " Which Disney princess sings \u201cJust Around The Riverbend\u201d?",
+        "answers": [
+            "Snow White",
+            "Pocahontas",
+            "Elsa",
+            "Belle"
+        ],
+        "answer": "Pocahontas"
+    },
+    {
+        "question": " Which biblical narrative is connected to Palm Sunday?",
+        "answers": [
+            "Jesus\u2019 entry into Jerusalem",
+            "Jesus\u2019 resurrection",
+            "Jesus feeding the thousands",
+            "Nothing, it just means to go to church on Sunday/the day of rest"
+        ],
+        "answer": "Jesus\u2019 entry into Jerusalem"
+    },
+    {
+        "question": " In Harry Potter and the Sorcerer\u2019s Stone, who gives Harry the invisibility cloak?",
+        "answers": [
+            "Ron",
+            "Snape",
+            "Dumbledore",
+            "No one; he just finds it"
+        ],
+        "answer": "Dumbledore"
+    },
+    {
+        "question": " How many boroughs are there in New York City?",
+        "answers": [
+            "4",
+            "5",
+            "6",
+            "10"
+        ],
+        "answer": "5"
+    },
+    {
+        "question": " In the U.S. version of The Office, Michael Scott burns his foot on:",
+        "answers": [
+            "Hot water",
+            "Pavement/cement",
+            "Rocks on fire",
+            "A George Foreman Grill"
+        ],
+        "answer": "George Foreman Grill"
+    },
+    {
+        "question": " The superstition believes that when the groundhog sees his shadow, it means:",
+        "answers": [
+            "Early spring",
+            "6 more weeks of winter",
+            "It\u2019s going to rain",
+            "A tornado is coming"
+        ],
+        "answer": "6 more weeks of winter"
+    },
+    {
+        "question": " What is the longest river in the world?",
+        "answers": [
+            "Amazon",
+            "Congo",
+            "Nile",
+            "Hudson"
+        ],
+        "answer": "Nile River"
+    },
+    {
+        "question": " How many days are in February during a leap year?",
+        "answers": [
+            "28",
+            "29",
+            "30",
+            "31"
+        ],
+        "answer": "29"
+    },
+    {
+        "question": " How many degrees are in a circle?",
+        "answers": [
+            "360",
+            "180",
+            "150",
+            "359"
+        ],
+        "answer": "360 degrees"
+    },
+    {
+        "question": " Which city is known as the City of Love?",
+        "answers": [
+            "Rome",
+            "Barcelona",
+            "New York City",
+            "Paris"
+        ],
+        "answer": "Paris"
+    },
+    {
+        "question": " As an adult, how many teeth should you have in your mouth?",
+        "answers": [
+            "35",
+            "32",
+            "30",
+            "42"
+        ],
+        "answer": "32"
+    },
+    {
+        "question": " What was the name of the boy who won Willy Wonka\u2019s factory?",
+        "answers": [
+            "Charlie Baxter",
+            "Charlie Brown",
+            "Charlie Bones",
+            "Charlie Bucket"
+        ],
+        "answer": "Charlie Bucket"
+    },
+    {
+        "question": " Edward Scissorhands is known for cutting:",
+        "answers": [
+            "Hair",
+            "Bushes",
+            "Clothes",
+            "Everything"
+        ],
+        "answer": "Everything"
+    },
+    {
+        "question": " In which city would you find the Fisherman\u2019s Bastion?",
+        "answers": [
+            "Rome",
+            "Budapest",
+            "Barcelona",
+            "Athens"
+        ],
+        "answer": "Budapest"
+    },
+    {
+        "question": " Which U.S. president doesn\u2019t/didn\u2019t have a dog in the White House?",
+        "answers": [
+            "Trump",
+            "Obama",
+            "Bush",
+            "Lincoln"
+        ],
+        "answer": "Trump"
+    },
+    {
+        "question": " What does the \u201cU\u201d stand for in \u201cUFO\u201d?",
+        "answers": [
+            "Unidentified",
+            "Under",
+            "United",
+            "Unique"
+        ],
+        "answer": "Unidentified"
+    },
+    {
+        "question": " Which U.S. state is known as \u201cAmerica\u2019s Dairyland\u201d?",
+        "answers": [
+            "Minnesota",
+            "Iowa",
+            "Pennsylvania",
+            "Wisconsin"
+        ],
+        "answer": "Wisconsin"
+    },
+    {
+        "question": " Usher found a young boy singing on YouTube and made him into a famous singer. What\u2019s that kid\u2019s name?",
+        "answers": [
+            "Niall Horan",
+            "Jaden Smith",
+            "Shawn Mendes",
+            "Justin Bieber"
+        ],
+        "answer": "Justin Bieber"
+    },
+    {
+        "question": " Which Olympic sport is Michael Phelps known for?",
+        "answers": [
+            "Snowboarding",
+            "Skiing",
+            "Running",
+            "Swimming"
+        ],
+        "answer": "Swimming"
+    },
+    {
+        "question": " What is the complementary color of green?",
+        "answers": [
+            "Blue",
+            "Yellow",
+            "Red",
+            "Purple"
+        ],
+        "answer": "Red"
+    },
+    {
+        "question": " Han Solo is a character from which movie series:",
+        "answers": [
+            "Harry Potter",
+            "Star Wars",
+            "Lord of the Rings",
+            "Indiana Jones"
+        ],
+        "answer": "Star Wars"
+    },
+    {
+        "question": " In Men and Black, what are the two FBI agents hunting?",
+        "answers": [
+            "Serial killers",
+            "Ghosts",
+            "Aliens",
+            "Time travelers"
+        ],
+        "answer": "Aliens"
+    },
+    {
+        "question": " The most recent seasons of American Idol have the judges Katy Perry, Lionel Richie, and\u2026",
+        "answers": [
+            "Trace Adkins",
+            "Luke Bryan",
+            "Blake Shelton",
+            "Keith Urban"
+        ],
+        "answer": "Luke Bryan"
+    },
+    {
+        "question": " How many Harry Potter books are there?",
+        "answers": [
+            "7",
+            "8",
+            "6",
+            "10"
+        ],
+        "answer": "7"
+    },
+    {
+        "question": " What breed of dog is the most popular in the U.S.?",
+        "answers": [
+            "Pug",
+            "Dalmatian",
+            "Beagle",
+            "Golden Retriever"
+        ],
+        "answer": "Golden Retriever"
+    },
+    {
+        "question": " Which rapper was known for his album Blue Slide Park?",
+        "answers": [
+            "J Cole",
+            "Post Malone",
+            "Eminem",
+            "Mac Miller"
+        ],
+        "answer": "Mac Miller"
+    },
+    {
+        "question": " How many sides does a hexagon have?",
+        "answers": [
+            "5",
+            "6",
+            "7",
+            "8"
+        ],
+        "answer": "6"
+    },
+    {
+        "question": " In which city was Ferris Bueller\u2019s Day Off filmed?",
+        "answers": [
+            "Pittsburgh",
+            "Chicago",
+            "NYC",
+            "San Francisco"
+        ],
+        "answer": "Chicago"
+    },
+    {
+        "question": " The UK is made up of the following countries: England, Ireland, Wales, and\u2026",
+        "answers": [
+            "France",
+            "Hungary",
+            "Scotland",
+            "Austria"
+        ],
+        "answer": "Scotland"
+    },
+    {
+        "question": " How many elements are there on the periodic table?",
+        "answers": [
+            "112",
+            "118",
+            "120",
+            "143"
+        ],
+        "answer": "118"
+    },
+    {
+        "question": " Where is the United Nations Headquarters?",
+        "answers": [
+            "D.C.",
+            "NYC",
+            "Philadelphia",
+            "Orlando"
+        ],
+        "answer": "NYC"
+    },
+    {
+        "question": " What famous singer sings with Taylor Swift in her song \u201cMe!\u201d?",
+        "answers": [
+            "Brendan Urie",
+            "Shawn Mendes",
+            "Ellie Goulding",
+            "Halsey"
+        ],
+        "answer": "Brendan Urie"
+    },
+    {
+        "question": " In what year did women get the right to vote?",
+        "answers": [
+            "1910",
+            "1920",
+            "1930",
+            "1940"
+        ],
+        "answer": "1920"
+    },
+    {
+        "question": " Where in the United States is the largest aquarium?",
+        "answers": [
+            "New Jersey",
+            "Maine",
+            "California",
+            "Georgia"
+        ],
+        "answer": "Georgia"
+    },
+    {
+        "question": " There are 5 great lakes in the United States: Lake Michigan, Lake Superior, Lake Ontario, Lake Erie, and\u2026",
+        "answers": [
+            "Lake Huron",
+            "Lake Hartwell",
+            "Lake Tahoe",
+            "Great Bear Lake"
+        ],
+        "answer": "Lake Huron"
+    },
+    {
+        "question": " Neil Armstrong was the first man\u2026",
+        "answers": [
+            "On Mars",
+            "On a spacecraft alone",
+            "On the Moon",
+            "To travel to the sun"
+        ],
+        "answer": "On the Moon"
+    },
+    {
+        "question": " What does \u201cFBI\u201d stand for?",
+        "answers": [
+            "Female Body Inspector",
+            "Federal Bureau of Investigation",
+            "Federal Business of Investigation",
+            "Federal Bureau of Inspection"
+        ],
+        "answer": "Federal Bureau of Investigation"
+    },
+    {
+        "question": " What is the deadliest snake?",
+        "answers": [
+            "Python",
+            "Cobra",
+            "Cobra",
+            "Black Mamba"
+        ],
+        "answer": "Black Mamba"
+    },
+    {
+        "question": " In The Office, what object of Dwight\u2019s does Jim put in jello?",
+        "answers": [
+            "Computer mouse",
+            "Wallet",
+            "Stapler",
+            "Coffee mug"
+        ],
+        "answer": "Stapler"
+    },
+    {
+        "question": " In Friends, how many times has Ross been married?",
+        "answers": [
+            "Only once",
+            "3 times",
+            "Twice",
+            "More than 3 times"
+        ],
+        "answer": "3 times"
+    },
+    {
+        "question": " What is a group of lions called?",
+        "answers": [
+            "Squad",
+            "Pack",
+            "Herd",
+            "Pride"
+        ],
+        "answer": "Pride"
+    },
+    {
+        "question": " How many keys are on a piano?",
+        "answers": [
+            "86",
+            "87",
+            "88",
+            "89"
+        ],
+        "answer": "88"
+    },
+    {
+        "question": " What was the name of the Greek mythological woman who had snakes for hair?",
+        "answers": [
+            "Pandora",
+            "Helen",
+            "Cassiopeia",
+            "Medusa"
+        ],
+        "answer": "Medusa"
+    },
+    {
+        "question": " What do you call a baby goat?",
+        "answers": [
+            "Kid",
+            "Goatee",
+            "Child",
+            "Baby Goat"
+        ],
+        "answer": "Kid"
+    },
+    {
+        "question": " According to Phineas and Ferb, there are __ days of summer vacation?",
+        "answers": [
+            "90",
+            "103",
+            "104",
+            "110"
+        ],
+        "answer": "104"
+    },
+    {
+        "question": " What is the most populous city in Canada?",
+        "answers": [
+            "Toronto",
+            "Ontario",
+            "Quebec",
+            "Vancouver"
+        ],
+        "answer": "Toronto"
+    },
+    {
+        "question": " The Da Vinci Code opens with a murder in which museum:",
+        "answers": [
+            "The Guggenheim",
+            "The Louvre",
+            "The Van Gogh museum",
+            "The Metropolitan Museum of Art"
+        ],
+        "answer": "The Louvre"
+    },
+    {
+        "question": " From which TV show is the family of Roses: Johnny, Moira, David, and Alexis?",
+        "answers": [
+            "Bob\u2019s Burgers",
+            "Schitt\u2019s Creek",
+            "Parenthood",
+            "7th Heaven "
+        ],
+        "answer": "Schitt\u2019s Creek "
+    },
+    {
+        "question": " After The Simpsons, what is the longest-running TV show?",
+        "answers": [
+            "Law & Order",
+            "Grey\u2019s Anatomy",
+            "Criminal Minds",
+            "NCIS"
+        ],
+        "answer": "Law & Order"
+    },
+    {
+        "question": " Which Disney princess sings \u201cA Dream Is A Wish Your Heart Makes\u201d?",
+        "answers": [
+            "Belle",
+            "Cinderella",
+            "Jasmine",
+            "Sleeping Beauty"
+        ],
+        "answer": "Cinderella"
+    },
+    {
+        "question": " How often does the moon orbit the Earth?",
+        "answers": [
+            "Every 7 days",
+            "Every 27 days",
+            "Every 30 days",
+            "Every 365 days"
+        ],
+        "answer": "Every 27 days"
+    },
+    {
+        "question": " In Greek Mythology, who is the Queen of the Underworld?",
+        "answers": [
+            "Pandora",
+            "Medusa",
+            "Helen",
+            "Persephone"
+        ],
+        "answer": "Persephone"
+    },
+    {
+        "question": " How many points are a touchdown worth?",
+        "answers": [
+            "5",
+            "6",
+            "7",
+            "8"
+        ],
+        "answer": "6"
+    },
+    {
+        "question": " How many feet are in a mile?",
+        "answers": [
+            "1,037",
+            "5,288",
+            "5,280",
+            "6,201"
+        ],
+        "answer": "5,280 feet"
+    },
+    {
+        "question": "Where is the Oval Office located in the White House?",
+        "answers": [
+            "North Wing",
+            "South Wing",
+            "East Wing",
+            "West Wing"
+        ],
+        "answer": "West Wing"
+    },
+    {
+        "question": " At what temperature (Fahrenheit) does water freeze?",
+        "answers": [
+            "32 degrees",
+            "40 degrees",
+            "-10 degrees",
+            "0 degrees"
+        ],
+        "answer": "32 degrees"
+    },
+    {
+        "question": " Where in Pennsylvania is The Office based?",
+        "answers": [
+            "Philadelphia",
+            "Pittsburgh",
+            "Scranton",
+            "Lancaster"
+        ],
+        "answer": "Scranton"
+    },
+    {
+        "question": " In the movie Good Will Hunting, which college does Skylar attend?",
+        "answers": [
+            "Harvard",
+            "Yale",
+            "Columbia",
+            "UCLA"
+        ],
+        "answer": "Harvard"
+    },
+    {
+        "question": " Where in California is Disneyland located?",
+        "answers": [
+            "Malibu",
+            "Huntington Beach",
+            "Los Angeles",
+            "Anaheim"
+        ],
+        "answer": "Anaheim"
+    },
+    {
+        "question": " \u201cI see dead people\u201d is a line from which horror film\u2026",
+        "answers": [
+            "The Sixth Sense",
+            "The Grudge",
+            "The Shining",
+            "The Exorcist "
+        ],
+        "answer": "The Sixth Sense"
+    },
+    {
+        "question": " Who founded Microsoft?",
+        "answers": [
+            "Bill Hader",
+            "Steve Jobs",
+            "Bill Gates",
+            "Mark Zuckerberg"
+        ],
+        "answer": "Bill Gates"
+    },
+    {
+        "question": " In which city was the movie National Treasure filmed?",
+        "answers": [
+            "Washington D.C.",
+            "NYC",
+            "Philadelphia",
+            "Roanoke"
+        ],
+        "answer": "Philadelphia"
+    },
+    {
+        "question": " Which classic novel has the line \u201cStay Gold, Ponyboy\u201d?",
+        "answers": [
+            "The Catcher in the Rye",
+            "1984",
+            "The Outsiders",
+            "Catch-22"
+        ],
+        "answer": "The Outsiders"
+    },
+    {
+        "question": " What was the name of Harry Potter\u2019s pet owl?",
+        "answers": [
+            "Hedwig",
+            "Luna",
+            "Dobby",
+            "Fluffy"
+        ],
+        "answer": "Hedwig"
+    },
+    {
+        "question": " Which Disney princess had 3 fairy godmothers?",
+        "answers": [
+            "Cinderella",
+            "Snow White",
+            "Sleeping Beauty",
+            "Jasmine"
+        ],
+        "answer": "Sleeping Beauty"
+    },
+    {
+        "question": " Which band came back together in 2019?",
+        "answers": [
+            "The Naked Brothers Band",
+            "The Jonas Brothers",
+            "One Direction",
+            "The Beatles"
+        ],
+        "answer": "The Jonas Brothers"
+    },
+    {
+        "question": " Steve Jobs is known for wearing a black\u2026",
+        "answers": [
+            "Button-down shirt",
+            "T-shirt",
+            "Turtleneck",
+            "Blazer"
+        ],
+        "answer": "Turtleneck"
+    },
+    {
+        "question": " In which movie does Anne Hathaway play a poor, homeless woman?",
+        "answers": [
+            "The Devil Wears Prada",
+            "Les Miserables",
+            "The Princess Diaries",
+            "Ella Enchanted "
+        ],
+        "answer": "Les Miserables"
+    },
+    {
+        "question": " The movie 10 Things I Hate About You was based on which play by Shakespeare:",
+        "answers": [
+            "Taming of the Shrew",
+            "Hamlet",
+            "Romeo and Juliet",
+            "A Midsummer Night\u2019s Dream"
+        ],
+        "answer": "The Taming of the Shrew"
+    },
+    {
+        "question": " Where does Nathan\u2019s Hot Dog Eating Contest take place?",
+        "answers": [
+            "Coney Island",
+            "Miami Beach",
+            "Mall of America",
+            "Orlando"
+        ],
+        "answer": "Coney Island"
+    },
+    {
+        "question": " What age did Amy Winehouse, Janis Joplin, and Jimi Hendrix die?",
+        "answers": [
+            "26",
+            "27",
+            "29",
+            "30"
+        ],
+        "answer": "27"
+    },
+    {
+        "question": " Which two planets in our solar system are known as \u201cice giants\u201d?",
+        "answers": [
+            "Neptune and Jupiter",
+            "Uranus and Pluto",
+            "Pluto and Jupiter",
+            "Neptune and Uranus"
+        ],
+        "answer": "Neptune + Uranus"
+    },
+    {
+        "question": " What country is Prague in?",
+        "answers": [
+            "Hungary",
+            "Austria",
+            "Czech Republic",
+            "Germany"
+        ],
+        "answer": "Czech Republic"
+    },
+    {
+        "question": " What is the actress\u2019s name in Funny Face, Sabrina, and Roman Holiday?",
+        "answers": [
+            "Audrey Hepburn",
+            "Natalie Wood",
+            "Marilyn Monroe",
+            "Grace Kelly"
+        ],
+        "answer": "Audrey Hepburn"
+    },
+    {
+        "question": " Which poet wrote the poem \u201cThe Raven\u201d? ",
+        "answers": [
+            "Robert Frost",
+            "Edgar Allen Poe",
+            "Walt Whitman",
+            "Sylvia Plath"
+        ],
+        "answer": "Edgar Allen Poe"
+    },
+    {
+        "question": " How many ribs are in the human body?",
+        "answers": [
+            "16",
+            "24",
+            "19",
+            "29"
+        ],
+        "answer": "24"
+    },
+    {
+        "question": " Who was the 16th president of the United States?",
+        "answers": [
+            "Lincoln",
+            "Nixon",
+            "Jackson",
+            "Madison"
+        ],
+        "answer": "Lincoln"
+    },
+    {
+        "question": " Who wrote the novel Slaughterhouse-Five?",
+        "answers": [
+            "Kurt Vonnegut",
+            "Stephen King",
+            "J.D. Salinger",
+            "Harper Lee"
+        ],
+        "answer": "Kurt Vonnegut"
+    },
+    {
+        "question": " In The Office, what was the food that Dwight grew on his farm?",
+        "answers": [
+            "Pumpkins",
+            "Beets",
+            "Onions",
+            "Potatoes"
+        ],
+        "answer": "Beets"
+    },
+    {
+        "question": " What animal is associated with ancient Egypt?",
+        "answers": [
+            "Lion",
+            "Cat",
+            "Hummingbird",
+            "Rabbit"
+        ],
+        "answer": "Cat"
+    },
+    {
+        "question": " In 2016, a musician won the Nobel Peace Prize for Literature. Who was it?",
+        "answers": [
+            "Lenny Kravitz",
+            "Eric Clapton",
+            "Bob Dylan",
+            "Elton John"
+        ],
+        "answer": "Bob Dylan"
+    },
+    {
+        "question": " How many time zones are there in the world?",
+        "answers": [
+            "7",
+            "24",
+            "23",
+            "9"
+        ],
+        "answer": "24"
+    },
+    {
+        "question": " What was the movie\u2019s name that featured Matthew McConaughey, Michael Caine, Anne Hathaway, John Lithgow, and Matt Damon?",
+        "answers": [
+            "Flight Plan",
+            "The Martian ",
+            "Interstellar",
+            "Ad Astra"
+        ],
+        "answer": "Interstellar"
+    },
+    {
+        "question": " How many rings are there in the Olympic symbol?",
+        "answers": [
+            "5",
+            "7",
+            "4",
+            "9"
+        ],
+        "answer": "5"
+    },
+    {
+        "question": " Twilight was both a book and a movie, with the main character Bella Swan being pulled into two different love directions with Edward Cullen and\u2026",
+        "answers": [
+            "Jasper Hale",
+            "Jacob Black",
+            "Billy Black",
+            "Dr. Cullen"
+        ],
+        "answer": "Jacob Black"
+    },
+    {
+        "question": " What is celebrated on December 26th?",
+        "answers": [
+            "The day after Christmas",
+            "Harvest Day",
+            "Boxing Day",
+            "National Dog Day"
+        ],
+        "answer": "Boxing Day"
+    },
+    {
+        "question": " What is the name of the second American astronaut to step foot on the moon?",
+        "answers": [
+            "Buzz Aldrin",
+            "Neil Armstrong",
+            "Alan Bean",
+            "James Irwin"
+        ],
+        "answer": "Buzz Aldrin"
+    },
+    {
+        "question": " How many eyes does a spider have?",
+        "answers": [
+            "8",
+            "9",
+            "10",
+            "2"
+        ],
+        "answer": "8"
+    },
+    {
+        "question": " What is the first book of the Old Testament in the Bible?",
+        "answers": [
+            "Matthew",
+            "Proverbs",
+            "Genesis",
+            "Exodus"
+        ],
+        "answer": "Genesis"
+    },
+    {
+        "question": " Which founding father is known for his large handwriting on the Declaration of Independence?",
+        "answers": [
+            "John Hancock",
+            "Thomas Jefferson",
+            "John Adams",
+            "Alexander Hamilton"
+        ],
+        "answer": "John Hancock"
+    },
+    {
+        "question": " What was the first Disney film that was produced in color?",
+        "answers": [
+            "Cinderella",
+            "Snow White and the Seven Dwarfs",
+            "Sleeping Beauty",
+            "Pocahontas"
+        ],
+        "answer": "Snow White and the Seven Dwarfs"
+    },
+    {
+        "question": " Sodium bicarbonate is used in the kitchen as what?",
+        "answers": [
+            "Salt",
+            "Sugar",
+            "Baking soda",
+            "Vinegar"
+        ],
+        "answer": "Baking soda"
+    },
+    {
+        "question": " In the 1983 movie National Lampoon\u2019s Vacation, what is the name of the fictional amusement park the Griswold family is trying to go to?",
+        "answers": [
+            "Dorney Park",
+            "Walley World",
+            "Six Flags",
+            "Dollywood"
+        ],
+        "answer": "Walley World"
+    },
+    {
+        "question": " In Ray Bradbury\u2019s novel Fahrenheit 451, what are they burning?",
+        "answers": [
+            "Clothes",
+            "Houses",
+            "Books",
+            "Money"
+        ],
+        "answer": "Books"
+    },
+    {
+        "question": " What was the first capital of the United States?",
+        "answers": [
+            "Washington, D.C.",
+            "Richmond",
+            "Boston",
+            "Philadelphia"
+        ],
+        "answer": "Philadelphia"
+    },
+    {
+        "question": " Which actor performs music under the stage name Childish Gambino?",
+        "answers": [
+            "Donald Glover",
+            "Will Smith",
+            "Frank Ocean",
+            "Tyler, The Creator"
+        ],
+        "answer": "Donald Glover"
+    },
+    {
+        "question": " Which water sport is the official sport for the state of Hawaii?",
+        "answers": [
+            "Water polo",
+            "Swimming",
+            "Water skiing",
+            "Surfing"
+        ],
+        "answer": "Surfing"
+    },
+    {
+        "question": " In the movie The Princess Bride, what is Westley\u2019s response to Buttercup\u2019s requests?",
+        "answers": [
+            "\u201cOkay.\u201d",
+            "\u201cOf course, I love you.\u201d",
+            "\u201cAs you wish.\u201d",
+            "\u201cAnything for you.\u201d"
+        ],
+        "answer": "\u201cAs you wish.\u201d"
+    },
+    {
+        "question": " What is the name of the company that published the Mario Kart video game?",
+        "answers": [
+            "Nintendo",
+            "Electronic Arts (EA)",
+            "SEGA",
+            "Xbox"
+        ],
+        "answer": "Nintendo"
+    }
+]
