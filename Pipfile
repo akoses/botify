@@ -11,5 +11,8 @@ py-cord = "==2.0.0b5"
 bs4 = "*"
 requests = "*"
 urllib3 = "*"
+pytz = "*"
+aiohttp = "*"
+asyncio = "*"
 
 [dev-packages]

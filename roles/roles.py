@@ -49,6 +49,21 @@ ROLE_TO_COLOUR ={
 }
 
 
+ROLE_TO_ENTRIES = {
+	"Chancellor": 60,
+	"President":55,
+	"Vice President":50,
+	"Dean":45,
+	"Department Head": 40,
+	"Professor":35,
+	"Post Doc":30,
+	"Teaching Assistant":25,
+	"Graduate":20,
+	"Upper Year Student":15,
+	"Lower Year Student":10,
+}
+
+
 ROLE_TO_SALARY = {
 	"Chancellor": 1024000,
 	"President": 512000,

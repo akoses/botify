@@ -144,6 +144,23 @@ def get_user_balance(discord_id):
 	conn.close()
 	return balance
 
+
+def set_user_balance(bal, discord_id):
+	"""
+	Set the balance of a user.
+	Args:
+		discord_id (int): The discord id of the user.
+		bal (int): The balance of the user.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("UPDATE users SET balance = balance + %s WHERE discord_id = %s", (bal, discord_id))
+	conn.commit()
+	cur.close()
+	conn.close()
+
+
 def get_user_rank(discord_id):
 	"""
 	Get the rank of a user.
@@ -194,6 +211,20 @@ async def apply_to_job(discord_id, jobs_id):
 	conn.close()
 
 
+async def add_salaries(members):
+	"""
+	Add a salary to a users.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.executemany("UPDATE users SET balance = balance + %s WHERE discord_id = %s", members)
+	conn.commit()
+	cur.close()
+	conn.close()
+
+
+
 async def set_role(discord_id, role):
 	"""
 	Set the role of a user.
@@ -221,7 +252,37 @@ async def attend_event(discord_id, event_id):
 	conn.close()
 
 
+async def get_entries(discord_id):
+	"""
+	Get all entries for a user.
+	Args:
+		discord_id (int): The discord id of the user.
+	Returns:
+		list: A list of entries.
+	"""
+	
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT giveaway_entries FROM users WHERE discord_id = %s", (discord_id,))
+	entries = cur.fetchone()
+	cur.close()
+	conn.close()
+	return entries[0]
 
+async def set_entries(discord_id, entries):
+	"""
+	Set all entries for a user.
+	Args:
+		discord_id (int): The discord id of the user.
+		entries int: A number of entries.
+	"""
+	
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("UPDATE users set giveaway_entries=%s WHERE discord_id = %s", (entries, discord_id))
+	conn.commit()
+	cur.close()
+	conn.close()
 
 async def insert_many_users(users:List[str]):
 	"""	

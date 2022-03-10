@@ -21,10 +21,10 @@ def find_jobs(job_title: str):
 			embed = discord.Embed(
 				title=title.text,
 				url=link.get("href"),
-				inline=False
+				
 			)
-			embed.add_field(name="Company", value=company.text)
-			embed.add_field(name="Location", value=location.text)
+			embed.add_field(name="Company", value=company.text, inline=False)
+			embed.add_field(name="Location", value=location.text, inline=False)
 			embeds.append(embed)
 		
 	return embeds
