@@ -32,7 +32,6 @@ LEVEL_TO_ROLE = {
 	0: "Drop Out"
 }
 
-
 ROLE_TO_COLOUR ={
 	"Chancellor": (168,	210, 251),
 	"President":(255, 170, 153),

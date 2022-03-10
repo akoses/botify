@@ -1,4 +1,3 @@
-import sched
 import discord
 import datetime
 import os
@@ -25,9 +24,10 @@ from db import (
 from xp import assign_xp
 from utils import *
 from roles.roles import IGNORE_ROLES, ROLE_TO_SALARY
+from scheduler import *
 
 intents = discord.Intents().all()
-scheduler = sc
+
 bot = commands.Bot(intents=intents)
 
 index_to_num = {
@@ -101,6 +101,7 @@ async def pay_salaries():
 		TRIVIA_PLAYERS.clear()
 
 
+
 @bot.event
 async def on_ready():
 	"""
@@ -118,7 +119,6 @@ async def on_ready():
 	if not pay_salaries.is_running():
 		pay_salaries.start()
 
-	
 	
 
 @bot.event
@@ -456,15 +456,15 @@ async def start_giveaway(ctx):
 		giveaway_description = await bot.wait_for('message', timeout=60)
 		await ctx.channel.purge(limit=14)
 		await ctx.respond(f"Your giveaway has been created and is scheduled to be drawn in {giveaway_time.content} hours.")
+		await create_giveaway(ctx, giveaway_name.content, 
+			giveaway_prize.content, 
+			int(giveaway_winners.content), 
+			int(giveaway_time.content), 
+			giveaway_description.content)
 	
 	except asyncio.TimeoutError:
 		await ctx.respond("You took too long to answer a question. Cancelling giveaway.")
 		return
-	await create_giveaway(ctx, giveaway_name.content, 
-	giveaway_prize.content, 
-	giveaway_winners.content, 
-	giveaway_time.content, 
-	giveaway_description.content)
 	
 
 
@@ -479,10 +479,11 @@ async def enter_giveaway(ctx,
 		await ctx.respond(f"Sorry, you do not have enough giveaway entries. You have {entry_count} entries.")
 	else:
 		try:
-			await giveaway_entry(ctx, name, entries)
+			giveaway_entry(ctx.interaction.user, name, entries)
 			await ctx.respond(f"You have entered {entries} entries. You now have {entry_count - entries} entries remaining.")
 			await set_entries(ctx.interaction.user.id, entry_count - entries)
 		except Exception as e:
+			print(e)
 			await ctx.respond(f"There is no giveaway with the name {name}.")
 
 bot.run(TOKEN)

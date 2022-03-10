@@ -14,5 +14,6 @@ urllib3 = "*"
 pytz = "*"
 aiohttp = "*"
 asyncio = "*"
+schedule = "*"
 
 [dev-packages]

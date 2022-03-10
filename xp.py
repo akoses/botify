@@ -6,7 +6,7 @@ import discord
 from db import get_xp_levels, set_xp_levels, set_role
 from dotenv import load_dotenv
 
-from roles.roles import get_level_to_role 
+from roles.roles import get_level_to_role , ROLE_TO_ENTRIES
 
 load_dotenv()
 LEVELS_CHANNEL = int(os.getenv('LEVELS_CHANNEL'))
@@ -129,11 +129,12 @@ async def assign_xp(bot, payload, discord_id:int, xp_amount = 0):
 	total_xp += xp
 	
 	new_level = get_level_from_xp(total_xp)
-	
+	entries = 0
 	if new_level > level:
 		new = False
 		new_role = None
 		if new_level % 10 == 0:
+			entries = ROLE_TO_ENTRIES[new_level]
 			new = True
 			old_role = discord.utils.get(bot.guilds[0].roles, name=get_level_to_role(level))
 			new_role = discord.utils.get(bot.guilds[0].roles, name=get_level_to_role(new_level))
@@ -145,7 +146,7 @@ async def assign_xp(bot, payload, discord_id:int, xp_amount = 0):
 
 		
 		await show_new_level(bot, new_level, discord_id, new, new_role)
-	set_xp_levels(discord_id, total_xp, new_level)
+	set_xp_levels(discord_id, total_xp, new_level, entries=entries)
 
 
 def xp_to_next_level(xp:int) -> int:

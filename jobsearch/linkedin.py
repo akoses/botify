@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 import urllib.parse
 import discord
 
+
 def find_jobs(job_title: str):
 	uri_job = urllib.parse.quote(job_title)
-	print(uri_job)
 	res = requests.get(f'https://www.linkedin.com/jobs/search/?keywords={uri_job}&location=Canada')
 
 	soup = BeautifulSoup(res.text, 'html.parser')
@@ -27,5 +27,5 @@ def find_jobs(job_title: str):
 			embed.add_field(name="Location", value=location.text, inline=False)
 			embeds.append(embed)
 		
-	return embeds
+	return embeds[:5]
 

@@ -279,7 +279,7 @@ async def set_entries(discord_id, entries):
 	
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("UPDATE users set giveaway_entries=%s WHERE discord_id = %s", (entries, discord_id))
+	cur.execute("UPDATE users SET giveaway_entries=%s WHERE discord_id = %s", (entries, discord_id))
 	conn.commit()
 	cur.close()
 	conn.close()
@@ -325,14 +325,15 @@ def get_xp_levels(
 def set_xp_levels(
 	discord_id,
 	total_xp,
-	level
+	level,
+	entries=0
 	):
 	"""
 	Set the xp levels of a user.
 	"""
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("UPDATE users SET total_xp = %s, level = %s WHERE discord_id = %s", (total_xp, level, discord_id))
+	cur.execute("UPDATE users SET total_xp = %s, level = %s, giveaway_entries = giveaway_entries + %s WHERE discord_id = %s", (total_xp, level, discord_id, entries))
 	conn.commit()
 	cur.close()
 	conn.close()

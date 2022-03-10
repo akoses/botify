@@ -3,9 +3,8 @@ import random
 import aiohttp
 import asyncio
 import html
-import discord
-import datetime
-CURRENT_GIVEAWAYS = dict()
+
+
 
 def days_to_seconds(days):
 	return days * 86400
@@ -59,43 +58,6 @@ def determine_trivia_prize():
 	
 	return random.choices(choices, weights=weights, k=1)[0]
 
-
-async def create_giveaway(ctx, name, prize, winners, time, description):
-	giveaway_time = datetime.datetime.now() + datetime.timedelta(hours=int(time))
-	giveaway = discord.Embed(
-		title=name,
-		description=description,
-		color=0xAFC2D5
-	)
-	giveaway.add_field(name="Prize  :money_with_wings: ", value=f"{prize}")
-	giveaway.add_field(name="Winners :trophy:", value=f"{winners} ")
-	giveaway.add_field(name="Draw Date :hourglass:", value=f"{giveaway_time.strftime('%B %d, %Y %I:%M %p')} ")
-	giveaway.set_footer(text=f"Use the /giveaway enter {name} command to enter the giveaway.")
-	giveaway_obj = {
-		'name': name,
-		'prize': prize,
-		'winners': winners,
-		'description': description,
-		'giveaway_time': giveaway_time,
-		'entries':[]
-	}
-
-	global CURRENT_GIVEAWAYS
-	CURRENT_GIVEAWAYS[name] = giveaway_obj
-
-	await ctx.channel.send(embed=giveaway)
-
-
-async def giveaway_entry(ctx, name, entries):
-	
-	giveaway_obj = CURRENT_GIVEAWAYS[name]
-	entry = {
-			'user': ctx.author.id,
-		'username': ctx.author.name,
-		'entries': entries
-	}
-
-	giveaway_obj['entries'].append(entry)
 
 
 
