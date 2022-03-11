@@ -5,8 +5,8 @@ from db import *
 import json
 
 class LinkView(discord.ui.View):
-	def __init__(self, url, label):
-		super().__init__()
+	def __init__(self, url, label, timeout=None):
+		super().__init__(timeout=timeout)
 		self.url = url
 		self.label = label
 		self.add_item(
@@ -39,6 +39,7 @@ class JobButton(discord.ui.Button):
 		await assign_xp(bot, "APPLY", interaction.user.id)
 		await apply_to_job(interaction.user.id, self.id)
 		await interaction.user.send(content=f"You have successfully tracked the role {self.name}! You can check your other applications using the `/applications` command.")
+
 
 class CollegeRequestView(discord.ui.View):
 	def __init__(self, college_data):
@@ -93,7 +94,7 @@ class TriviaButton(discord.ui.Button):
 
 	async def callback(self, interaction):
 		correct = self.custom_id.split(" ")[1]
-		prize = redisClient.get('trivia-prize')
+		prize = int(redisClient.get('trivia-prize'))
 		if correct == self.label:
 			await interaction.response.edit_message(content="That's correct! You've just won ${} coins! Come back tomorrow to play again.".format(prize), view=None)
 			set_user_balance(prize, interaction.user.id)

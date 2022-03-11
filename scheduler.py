@@ -5,7 +5,15 @@ import datetime
 from pytz import timezone
 from utils import *
 from db import get_event
-CURRENT_GIVEAWAYS = dict()
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.jobstores.redis import RedisJobStore
+
+jobstores = {
+	'default': RedisJobStore(),
+}
+
+scheduler = AsyncIOScheduler(event_loop=bot.loop, jobstores=jobstores)
+
 
 async def create_giveaway(ctx, name, prize, winners, gtime, description):
 	giveaway_time = datetime.datetime.now(timezone('Canada/Mountain')) + datetime.timedelta(hours=int(gtime))
@@ -31,10 +39,11 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description):
 	}
 
 	
-	redisClient.set(name,  json.dumps(giveaway_obj))
+	redisClient.set(name, json.dumps(giveaway_obj, default=str))
+	redisClient.sadd('giveaways', name)
 	await ctx.channel.send(embed=giveaway)
 	
-	ctx.bot.loop.create_task(end_giveaway(ctx.bot, name, int(gtime*3600)))
+	scheduler.add_job(end_giveaway, 'date', run_date=giveaway_time, timezone=timezone('Canada/Mountain'), args=[name])
 
 def giveaway_entry(user, name, entries):
 	
@@ -47,17 +56,16 @@ def giveaway_entry(user, name, entries):
 	}
 
 	giveaway_obj['entries'].append(entry)
-	redisClient.set(name,  json.dumps(giveaway_obj))
+	redisClient.set(name, json.dumps(giveaway_obj, default=str))
 
 
-async def end_giveaway(bot, gid, sleep_time):
-	await asyncio.sleep(sleep_time)
+async def end_giveaway(gid):
 	giveaway = json.loads(redisClient.get(gid))
 	redisClient.delete(gid)
-
+	redisClient.srem('giveaways', gid)
 	entries = giveaway['entries']
 	if len(entries) < 1:
-		await bot.get_channel(939423795763105825).send(content=f"**No one enter {giveaway['name']} so there are no winners! :cry:**")
+		await bot.get_channel(939423795763105825).send(content=f"**No one entered {giveaway['name']} so there are no winners! :cry:**")
 		return
 	entry_weights = map(lambda e: e['entries'], entries)
 
@@ -83,20 +91,20 @@ async def end_giveaway(bot, gid, sleep_time):
 		await bot.get_channel(939423795763105825).send(content=f"**Winner of {giveaway['name']}**", embed=embeds[0])
 	else:
 		await bot.get_channel(939423795763105825).send(content=f"Winners of {giveaway['name']}", embeds=embeds)
-
+	
 		
-async def notify_event(event_id, sleep):
-	await asyncio.sleep(sleep)
+async def notify_event(event_id):
+	
 	event = get_event(event_id)
 	embed = discord.Embed(
 		title=f"**{event[2]}**",
-		description=f"{event['description']}",
+		description=f"{event[3]}",
 		color=0xABC2D5,
 	)
 	
 	embed.add_field(name="Hosted By", value=f"{event[4]}")
 	embed.set_footer(text=event[7])
-	user_ids = redisClient.lrange(event_id, 0, -1)
+	user_ids = list(map(int, redisClient.smembers(str(event_id))))
 	users = list(map(bot.get_user, user_ids))
 	button = discord.ui.Button(style=discord.ButtonStyle.link, url=event[7], label='Join Event')
 	view = discord.ui.View()
@@ -104,6 +112,7 @@ async def notify_event(event_id, sleep):
 	for user in users:
 		await user.send(content=f"**{event[2]} is starting right away!**", embed=embed, view=view)
 
+	redisClient.delete(event_id)
 
 
 

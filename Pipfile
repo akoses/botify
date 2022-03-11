@@ -16,5 +16,6 @@ aiohttp = "*"
 asyncio = "*"
 schedule = "*"
 redis = "*"
+apscheduler = "*"
 
 [dev-packages]

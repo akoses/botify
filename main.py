@@ -1,10 +1,9 @@
 import discord
 import datetime
-import os
-import time
 from dotenv import load_dotenv
 from discord.commands import Option, permissions
-from discord.ext import commands, tasks
+from discord.ext import tasks
+from pytz import timezone
 import jobsearch.indeed as ind
 import jobsearch.linkedin as lkn
 import books.libgen as libgen
@@ -15,13 +14,14 @@ from db import (
 	get_role, 
 	apply_to_job, 
 	get_applications, 
-	attend_event, 
 	add_salaries, 
-	set_user_balance, 
 	get_entries, 
 	set_entries, 
 	get_latest_events,
-	get_latest_jobs
+	get_latest_jobs,
+	get_event_name,
+	get_job_name,
+	get_previous_application, 
 )
 
 from views import *
@@ -29,9 +29,6 @@ from xp import assign_xp
 from utils import *
 from roles.roles import IGNORE_ROLES, ROLE_TO_SALARY
 from scheduler import *
-
-
-
 
 index_to_num = {
 	1: "one",
@@ -67,9 +64,10 @@ async def college_search(ctx:discord.AutocompleteContext):
 	return [college for college in college_roles]
 
 async def giveaway_search(ctx:discord.AutocompleteContext):
-	if not CURRENT_GIVEAWAYS:
+	if not redisClient.exists('giveaways'):
 		return []
-	return list(CURRENT_GIVEAWAYS.keys())
+	
+	return list(map(lambda x: x.decode('utf-8'), redisClient.smembers('giveaways')))
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -79,11 +77,11 @@ ADMIN_ROLE = int(os.getenv('ADMIN_ROLE'))
 invite_map = dict()
 
 
-@tasks.loop(time=[datetime.time(hour=4, minute=0, second=0)])
+@tasks.loop(time=[datetime.time(hour=4, minute=0, second=0)], reconnect=True)
 async def get_would_you_rather():
 	question, answers = await get_poll()
 	if question and answers:
-		embed = discord.Embed(title=question, color=0x00ff00)
+		embed = discord.Embed(title=question, color=0xbaffc0)
 		for i, answer in enumerate(answers):
 			embed.add_field(name = f':{index_to_num[i + 1]}:',  value=answer, inline=False)
 		
@@ -101,11 +99,11 @@ async def pay_salaries():
 		members = map(lambda x: (salary, x.id), members)
 		await add_salaries(members)
 		print("All salaries paid for role: %s" % role)
-		TRIVIA_PLAYERS.clear()
+		
 
 
-@tasks.loop(time=[datetime.time(hour=8, minute=0, second=0)])
-async def get_trivia_question():
+@tasks.loop(time=[datetime.time(hour=7, minute=0, second=0)], reconnect=True)
+async def loop_trivia_question():
 	question, correct, answers = await get_trivia_question()
 	
 	if question and correct and answers:
@@ -116,45 +114,46 @@ async def get_trivia_question():
 		}
 		trivia_json = json.dumps(trivia)
 	redisClient.set("trivia", trivia_json)
-	redisClient.delete("trivia_players")
+	redisClient.delete("trivia-players")
 	prize = determine_trivia_prize()
-	redisClient.set("trivia_prize", prize)
+	redisClient.set("trivia-prize", prize)
 
-@tasks.loop(secs=30)
+@tasks.loop(seconds=30)
 async def check_events():
-	events = await get_latest_events()
+	events = get_latest_events()
 	if events:
 		for event in events:
 			channel = bot.get_channel(event[5])
 			if channel:
-				embed = discord.Embed(title=event[2], description=event[3], color=0x00ff00)
+				embed = discord.Embed(title=event[2], description=event[3], color=0xffffff)
 				embed.add_field(name="Hosted by", value=event[4])
 				embed.add_field(name="Date", value=event[6])
+				embed.set_footer(text="Event ID: %s" % event[0])
 				link =  event[7]
 				view = LinkView(link, "Event Link")
-				event_button = EventButton(str(event[0]), event[2])
-				view.add_item(event_button) 
 				await channel.send(embed=embed, view=view)
-				date = time.mktime(event[6].timetuple())
-				bot.loop.create_task(notify_event(event[0]))
-
-@tasks.loop(secs=30)
+				scheduler.add_job(notify_event, 'date', run_date=event[6], timezone=timezone('Canada/Mountain'), args=[event[0]])
+				if event[1]:
+					assign_xp(bot, "POST_EVENT", event[1])
+@tasks.loop(seconds=30)
 async def check_jobs():
-	jobs = await get_latest_jobs()
+	jobs = get_latest_jobs()
+	
 	if jobs:
 		for job in jobs:
-			channel = bot.get_channel(job[5])
+			channel = bot.get_channel(job[7])
 			if channel:
 				embed = discord.Embed(title=job[3], description=job[4], color=0x00ff00)
 				embed.add_field(name="Organization", value=job[5])
 				embed.add_field(name="Location", value=job[8])
 				embed.add_field(name="Disciplines", value=job[6])
+				embed.set_footer(text="JOB ID: %s" % job[0])
 				link =  job[9]
 				view = LinkView(link, "Apply URL")
-				job_button = JobButton(str(job[0]), job[3])
-				view.add_item(job_button)
+
 				await channel.send(embed=embed, view=view)
-			
+				if job[1]:
+					assign_xp(bot, "POST_JOB", job[1])
 						
 @bot.event
 async def on_ready():
@@ -166,13 +165,22 @@ async def on_ready():
 	for invite in invites:
 		invite_map[invite.code] = invite
 	
+	scheduler.start()
 
 	if not get_would_you_rather.is_running():
 		get_would_you_rather.start()
 
 	if not pay_salaries.is_running():
 		pay_salaries.start()
+	
+	if not loop_trivia_question.is_running():
+		loop_trivia_question.start()
 
+	if not check_events.is_running():
+		check_events.start()
+	
+	if not check_jobs.is_running():
+		check_jobs.start()
 	
 
 @bot.event
@@ -246,10 +254,18 @@ async def rank(ctx):
 async def apply(ctx,
 	job_id: Option(int, "Enter the job id to apply")
 ):
+	previous_application = get_previous_application(ctx.interaction.user.id, job_id)
+	if previous_application:
+		await ctx.interaction.response.send_message("You have already applied to this job.")
+		return
+	
+	job_name = get_job_name(job_id)
+	if not job_name:
+		await ctx.interaction.response.send_message("There is no job with that id.")
+		return
+	await ctx.respond(f"Successfully tracking job **{job_name}** for {ctx.interaction.user.mention}")
 	await apply_to_job(ctx.interaction.user.id, job_id)
-	await assign_xp(bot, "APPLY", ctx.interaction.user.id)
-	await ctx.respond(f"Applied to job {job_id} for {ctx.interaction.user.name}")
-
+	await assign_xp(bot, "APPLY", ctx.interaction.user.id)	
 
 @bot.slash_command(name="salary", description="Shows a user's current salary.", guild_ids=[939394818428243999])
 async def salary(ctx):
@@ -263,19 +279,34 @@ async def salary(ctx):
 @bot.slash_command(name="applications", description="Show all my current applications", guild_ids=[939394818428243999])
 async def applications(ctx):
 	apps = get_applications(ctx.interaction.user.id)
+	if not apps:
+		await ctx.respond("You have no applications.")
+		return
 	for app in apps:
 		embed = discord.Embed(
 			title=f"{app[0]}",
 		)
-		embed.add_field(name="📝 Date 📝", value=app[1])
-		ctx.respond(embed=embed)
+		embed.add_field(name="Organization", value=app[1])
+		embed.add_field(name="Location", value=app[3])
+		embed.add_field(name="📝Application Date 📝", value=app[4])
+		view = LinkView(app[2], "Apply URL")
+		await ctx.respond(embed=embed, view=view)
 
 
 @bot.slash_command(name="attend-event" ,description="Attend an event given an event id. You will be given a reminder for the event to start.", guild_ids=[939394818428243999])
 async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
+	
+	event_name = get_event_name(event_id)
+	previous_event = redisClient.sismember(str(event_id), str(ctx.interaction.user.id))
+	if previous_event:
+		await ctx.interaction.response.send_message("You have already signed up for this event.")
+		return
+	if not event_name:
+		await ctx.interaction.response.send_message("There is no event with that id.")
+		return
+	redisClient.sadd(str(event_id), str(ctx.interaction.user.id))
 	await assign_xp(bot, "ATTEND_EVENT", ctx.interaction.user.id)
-	await attend_event(ctx.interaction.user.id, event_id)
-	await ctx.respond(f"Attended event {event_id} for {ctx.interaction.user.name}")
+	await ctx.respond(content="You have successfully signed up to be notified of {}!".format(event_name))
 
 
 

@@ -4,6 +4,7 @@ import psycopg2
 import discord
 from dotenv import load_dotenv
 import os
+import datetime
 load_dotenv()
 
 INSERT_USERS = """INSERT INTO users (discord_id, balance, giveaway_entries, role_name, total_xp, level) VALUES (%s, %s, %s, %s, %s, %s)"""
@@ -46,7 +47,7 @@ def create_tables():
 	"""
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("""CREATE TABLE users IF NOT EXISTS (
+	cur.execute("""CREATE TABLE IF NOT EXISTS users(
 		id SERIAL,
 		discord_id bigint PRIMARY KEY,
 		giveaway_entries int, 
@@ -56,15 +57,7 @@ def create_tables():
 		level INT);
 	""")
 
-	cur.execute("""CREATE TABLE apply (
-		id SERIAL PRIMARY KEY, 
-		jobs_id INT,
-		discord_id bigint,
-		date TIMESTAMP,
-		CONSTRAINT apply_jobs_id_fk FOREIGN KEY (jobs_id) REFERENCES jobs (id), 
-		CONSTRAINT fk_discord FOREIGN KEY(discord_id) REFERENCES users(discord_id));""")
-
-	cur.execute("""CREATE TABLE jobs (                                                                     
+	cur.execute("""CREATE TABLE IF NOT EXISTS jobs(                                                              
 				id SERIAL PRIMARY KEY,                                                                           
 				discord_id bigint,
 				status TEXT,
@@ -77,14 +70,25 @@ def create_tables():
 				applyURL TEXT
 				);""")
 
-	cur.execute("""CREATE TABLE events (                                                                   
+	cur.execute("""CREATE TABLE IF NOT EXISTS apply (
+		id SERIAL PRIMARY KEY, 
+		jobs_id INT,
+		discord_id bigint,
+		date TIMESTAMP,
+		CONSTRAINT apply_jobs_id_fk FOREIGN KEY (jobs_id) REFERENCES jobs (id) ON DELETE CASCADE, 
+		CONSTRAINT fk_discord FOREIGN KEY(discord_id) REFERENCES users(discord_id) ON DELETE CASCADE);""")
+
+	
+
+	cur.execute("""CREATE TABLE IF NOT EXISTS events(                                                                
 			id SERIAL PRIMARY KEY,                                                                           
 			discord_id bigint,
 			name TEXT,
 			description TEXT,
 			hosted_by TEXT,
+			status TEXT,
 			channel bigint, 
-			date DATE,
+			date TIMESTAMP,
 			link TEXT);""")
 	
 	conn.commit()
@@ -184,8 +188,9 @@ def get_latest_events():
 
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("UPDATE events SET status=SHOWN WHERE status=PENDING RETURNING *")
+	cur.execute("UPDATE events SET status='SHOWN' WHERE status='PENDING' RETURNING *")
 	events = cur.fetchall()
+	conn.commit()
 	cur.close()
 	conn.close()
 	return events
@@ -199,11 +204,48 @@ def get_latest_jobs():
 
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("UPDATE jobs SET status=SHOWN WHERE status=PENDING RETURNING *")
+	cur.execute("UPDATE jobs SET status='SHOWN' WHERE status='PENDING' RETURNING *")
 	jobs = cur.fetchall()
+	conn.commit()
 	cur.close()
 	conn.close()
 	return jobs
+
+def get_event_name(event_id):
+	"""
+	Get the name of an event.
+	Args:
+		event_id (int): The id of the event.
+	Returns:
+		str: The name of the event.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT name FROM events WHERE id = %s", (event_id,))
+	name = cur.fetchone()
+	cur.close()
+	conn.close()
+	if name:
+		return name[0]
+
+def get_job_name(job_id):
+	"""
+	Get the name of a job.
+	Args:
+		job_id (int): The id of the job.
+	Returns:
+		str: The name of the job.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT name FROM jobs WHERE id = %s", (job_id,))
+	name = cur.fetchone()
+	cur.close()
+	conn.close()
+	if name:
+		return name[0]
 
 def get_applications(user_id):
 	"""
@@ -216,7 +258,7 @@ def get_applications(user_id):
 	
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("""SELECT j.name a.date FROM jobs j INNER JOIN apply a WHERE j.id = (SELECT jobs_id FROM apply WHERE discord_id = %s) LIMIT 10""", (user_id,))
+	cur.execute("""SELECT j.name, j.organization, j.applyURL, j.location, a.date FROM jobs j INNER JOIN apply a ON j.id = (SELECT jobs_id FROM apply WHERE discord_id = %s) LIMIT 10""", (user_id,))
 
 	applications = cur.fetchall()
 
@@ -225,13 +267,37 @@ def get_applications(user_id):
 	return applications
 
 
+def get_previous_application(user_id, job_id):
+	"""
+	Get the previous application of a user.
+	Args:
+		user_id (int): The user id.
+	Returns:
+		list: A list of the previous application.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT * FROM jobs WHERE id = %s AND discord_id= %s", (job_id, user_id))
+
+	application = cur.fetchone()
+	cur.close()
+	conn.close()
+	return application
+
+
+
 async def apply_to_job(discord_id, jobs_id):
 	"""
 	Apply to a job for a given user.
 	"""
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("INSERT INTO apply (discord_id, jobs_id) VALUES (%s, %s)", (discord_id, jobs_id))
+	cur.execute("""INSERT INTO apply (discord_id, jobs_id, date) SELECT %s, %s, %s
+		WHERE NOT EXISTS 
+		(SELECT * FROM apply WHERE discord_id = %s AND jobs_id = %s)""", 
+		(discord_id, jobs_id, datetime.datetime.now(), discord_id, jobs_id)) 
+
 	conn.commit()
 	cur.close()
 	conn.close()
@@ -335,7 +401,7 @@ async def insert_many_users(users:List[str]):
 	cur = conn.cursor()
 	mapped_users = []
 	def fn(discord_id):
-		return (discord_id, 0, 1, "Lower Year Student", 0, 1)
+		return (discord_id, 0, 10, "Lower Year Student", 0, 1)
 	
 	for user in users:
 		new_user = fn(user)
@@ -376,7 +442,7 @@ def set_xp_levels(
 	"""
 	conn = connect()
 	cur = conn.cursor()
-	cur.execute("UPDATE users SET total_xp = %s, level = %s, giveaway_entries = giveaway_entries + %s WHERE discord_id = %s", (total_xp, level, discord_id, entries))
+	cur.execute("UPDATE users SET total_xp = %s, level = %s, giveaway_entries = giveaway_entries + %s WHERE discord_id = %s", (total_xp, level, entries, discord_id, ))
 	conn.commit()
 	cur.close()
 	conn.close()
@@ -401,7 +467,9 @@ async def on_ready():
 	"""
 	This event is called when the bot is ready.
 	"""
+	
 	print(f'{client.user.name} has connected to Discord!')
+	create_tables()
 	members = client.guilds[0].members
 	await insert_many_users(list(map(lambda x: x.id, members)))
 	await client.close()
