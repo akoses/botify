@@ -10,7 +10,6 @@ INSERT_USERS = """INSERT INTO users (discord_id, balance, giveaway_entries, role
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 intents = discord.Intents.all()
-
 client = discord.Client(intents=intents)
 
 
@@ -65,20 +64,15 @@ def create_tables():
 		CONSTRAINT apply_jobs_id_fk FOREIGN KEY (jobs_id) REFERENCES jobs (id), 
 		CONSTRAINT fk_discord FOREIGN KEY(discord_id) REFERENCES users(discord_id));""")
 
-	cur.execute("""CREATE TABLE attend_event (
-		id SERIAL PRIMARY KEY, 
-		event_id INT,
-		discord_id bigint,
-		date TIMESTAMP,
-		CONSTRAINT attend_events_id_fk FOREIGN KEY (event_id) REFERENCES event(id), 
-		CONSTRAINT fk_discord FOREIGN KEY(discord_id) REFERENCES users(discord_id));""")
-
 	cur.execute("""CREATE TABLE jobs (                                                                     
 				id SERIAL PRIMARY KEY,                                                                           
 				discord_id bigint,
+				status TEXT,
 				name TEXT,
 				description TEXT,
+				organization TEXT,
 				disciplines TEXT,
+				channel bigint,
 				location TEXT,
 				applyURL TEXT
 				);""")
@@ -89,6 +83,7 @@ def create_tables():
 			name TEXT,
 			description TEXT,
 			hosted_by TEXT,
+			channel bigint, 
 			date DATE,
 			link TEXT);""")
 	
@@ -118,7 +113,7 @@ def get_role(discord_id):
 	Returns:
 		str: The role of the user.
 	"""
-
+ 
 	conn = connect()
 	cur = conn.cursor()
 	cur.execute("SELECT role_name FROM users WHERE discord_id = %s", (discord_id,))
@@ -178,6 +173,37 @@ def get_user_rank(discord_id):
 	cur.close()
 	conn.close()
 	return rank
+
+
+def get_latest_events():
+	"""
+	Get the latest events.
+	Returns:
+		list: A list of the latest events.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("UPDATE events SET status=SHOWN WHERE status=PENDING RETURNING *")
+	events = cur.fetchall()
+	cur.close()
+	conn.close()
+	return events
+
+def get_latest_jobs():
+	"""
+	Get the latest jobs.
+	Returns:
+		list: A list of the latest jobs.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("UPDATE jobs SET status=SHOWN WHERE status=PENDING RETURNING *")
+	jobs = cur.fetchall()
+	cur.close()
+	conn.close()
+	return jobs
 
 def get_applications(user_id):
 	"""
@@ -251,6 +277,23 @@ async def attend_event(discord_id, event_id):
 	cur.close()
 	conn.close()
 
+
+def get_event(event_id):
+	"""
+	Get an event.
+	Args:
+		event_id (int): The event id.
+	Returns:
+		tuple: The event.
+	"""
+
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT * FROM events WHERE id = %s", (event_id,))
+	event = cur.fetchone()
+	cur.close()
+	conn.close()
+	return event
 
 async def get_entries(discord_id):
 	"""

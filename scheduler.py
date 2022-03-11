@@ -3,7 +3,8 @@ import random
 import discord
 import datetime
 from pytz import timezone
-
+from utils import *
+from db import get_event
 CURRENT_GIVEAWAYS = dict()
 
 async def create_giveaway(ctx, name, prize, winners, gtime, description):
@@ -29,15 +30,15 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description):
 		'entries':[]
 	}
 
-	global CURRENT_GIVEAWAYS
-	CURRENT_GIVEAWAYS[name] = giveaway_obj
+	
+	redisClient.set(name,  json.dumps(giveaway_obj))
 	await ctx.channel.send(embed=giveaway)
 	
 	ctx.bot.loop.create_task(end_giveaway(ctx.bot, name, int(gtime*3600)))
 
 def giveaway_entry(user, name, entries):
 	
-	giveaway_obj = CURRENT_GIVEAWAYS[name]
+	giveaway_obj = json.loads(redisClient.get(name))
 	
 	entry = {
 		'user': user.id,
@@ -46,13 +47,13 @@ def giveaway_entry(user, name, entries):
 	}
 
 	giveaway_obj['entries'].append(entry)
-	CURRENT_GIVEAWAYS[name] = giveaway_obj
+	redisClient.set(name,  json.dumps(giveaway_obj))
 
 
 async def end_giveaway(bot, gid, sleep_time):
 	await asyncio.sleep(sleep_time)
-	giveaway = CURRENT_GIVEAWAYS[gid]
-	del CURRENT_GIVEAWAYS[gid]
+	giveaway = json.loads(redisClient.get(gid))
+	redisClient.delete(gid)
 
 	entries = giveaway['entries']
 	if len(entries) < 1:
@@ -84,22 +85,24 @@ async def end_giveaway(bot, gid, sleep_time):
 		await bot.get_channel(939423795763105825).send(content=f"Winners of {giveaway['name']}", embeds=embeds)
 
 		
-
-async def notify_event(bot, event, sleep):
+async def notify_event(event_id, sleep):
 	await asyncio.sleep(sleep)
+	event = get_event(event_id)
 	embed = discord.Embed(
-		title=f"**{event['name']}**",
+		title=f"**{event[2]}**",
 		description=f"{event['description']}",
 		color=0xABC2D5,
 	)
-	embed.add_field(name="Hosted By", value=f"{event['host']}")
-	embed.set_footer(text=event['url'])
-	users = list(map(bot.get_user, event['users']))
-	button = discord.ui.Button(style=discord.ButtonStyle.link, url=event['url'], label='Join Event')
+	
+	embed.add_field(name="Hosted By", value=f"{event[4]}")
+	embed.set_footer(text=event[7])
+	user_ids = redisClient.lrange(event_id, 0, -1)
+	users = list(map(bot.get_user, user_ids))
+	button = discord.ui.Button(style=discord.ButtonStyle.link, url=event[7], label='Join Event')
 	view = discord.ui.View()
 	view.add_item(button)
 	for user in users:
-		await user.send(content=f"**{event['name']} is starting right away!**", embed=embed, view=view)
+		await user.send(content=f"**{event[2]} is starting right away!**", embed=embed, view=view)
 
 
 
