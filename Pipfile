@@ -15,5 +15,6 @@ pytz = "*"
 aiohttp = "*"
 asyncio = "*"
 schedule = "*"
+redis = "*"
 
 [dev-packages]
