@@ -15,8 +15,8 @@ jobstores = {
 scheduler = AsyncIOScheduler(event_loop=bot.loop, jobstores=jobstores)
 
 
-async def create_giveaway(ctx, name, prize, winners, gtime, description):
-	giveaway_time = datetime.datetime.now(timezone('Canada/Mountain')) + datetime.timedelta(hours=int(gtime))
+async def create_giveaway(ctx, name, prize, winners, gtime, description, level):
+	giveaway_time = datetime.datetime.now(timezone('Canada/Mountain')) + datetime.timedelta(hours=gtime)
 	
 	giveaway = discord.Embed(
 		title=name,
@@ -24,9 +24,9 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description):
 		color=0xAFC2D5
 	)
 
-	giveaway.add_field(name="Prize  :money_with_wings: ", value=f"{prize}")
-	giveaway.add_field(name="Winners :trophy:", value=f"{winners} ")
-	giveaway.add_field(name="Draw Date :hourglass:", value=f"{giveaway_time.strftime('%B %d, %Y %I:%M %p')} ")
+	giveaway.add_field(name="Prize  :money_with_wings: ", value=f"{prize}", inline=False)
+	giveaway.add_field(name="Winners :trophy:", value=f"{winners} ", inline=False)
+	giveaway.add_field(name="Draw Date :hourglass:", value=f"{giveaway_time.strftime('%B %d, %Y %I:%M %p')} ",inline=False)
 	giveaway.set_footer(text=f"Use the /giveaway enter {name} command to enter the giveaway.")
 	
 	giveaway_obj = {
@@ -35,19 +35,20 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description):
 		'winners': winners,
 		'description': description,
 		'giveaway_time': giveaway_time,
+		'required_level': level,
 		'entries':[]
 	}
 
 	
-	redisClient.set(name, json.dumps(giveaway_obj, default=str))
-	redisClient.sadd('giveaways', name)
+	await redisClient.set(name, json.dumps(giveaway_obj, default=str))
+	await redisClient.sadd('giveaways', name)
 	await ctx.channel.send(embed=giveaway)
 	
 	scheduler.add_job(end_giveaway, 'date', run_date=giveaway_time, timezone=timezone('Canada/Mountain'), args=[name])
 
-def giveaway_entry(user, name, entries):
+async def giveaway_entry(user, name, entries):
 	
-	giveaway_obj = json.loads(redisClient.get(name))
+	giveaway_obj = json.loads(await redisClient.get(name))
 	
 	entry = {
 		'user': user.id,
@@ -56,13 +57,13 @@ def giveaway_entry(user, name, entries):
 	}
 
 	giveaway_obj['entries'].append(entry)
-	redisClient.set(name, json.dumps(giveaway_obj, default=str))
+	await redisClient.set(name, json.dumps(giveaway_obj, default=str))
 
 
 async def end_giveaway(gid):
-	giveaway = json.loads(redisClient.get(gid))
-	redisClient.delete(gid)
-	redisClient.srem('giveaways', gid)
+	giveaway = json.loads(await redisClient.get(gid))
+	await redisClient.delete(gid)
+	await redisClient.srem('giveaways', gid)
 	entries = giveaway['entries']
 	if len(entries) < 1:
 		await bot.get_channel(939423795763105825).send(content=f"**No one entered {giveaway['name']} so there are no winners! :cry:**")
@@ -95,24 +96,24 @@ async def end_giveaway(gid):
 		
 async def notify_event(event_id):
 	
-	event = get_event(event_id)
+	event = await get_event(event_id)
 	embed = discord.Embed(
-		title=f"**{event[2]}**",
-		description=f"{event[3]}",
+		title=f"**{event.get('name')}**",
+		description=f"{event.get('description')}",
 		color=0xABC2D5,
 	)
 	
-	embed.add_field(name="Hosted By", value=f"{event[4]}")
-	embed.set_footer(text=event[7])
-	user_ids = list(map(int, redisClient.smembers(str(event_id))))
+	embed.add_field(name="Hosted By", value=f"{event.get('hosted')}")
+	embed.set_footer(text=event.get('date'))
+	user_ids = list(map(int, await redisClient.smembers(str(event_id))))
 	users = list(map(bot.get_user, user_ids))
-	button = discord.ui.Button(style=discord.ButtonStyle.link, url=event[7], label='Join Event')
+	button = discord.ui.Button(style=discord.ButtonStyle.link, url=event.get('link'), label='Join Event')
 	view = discord.ui.View()
 	view.add_item(button)
 	for user in users:
-		await user.send(content=f"**{event[2]} is starting right away!**", embed=embed, view=view)
+		await user.send(content=f"**{event.ge('name')} is starting right away!**", embed=embed, view=view)
 
-	redisClient.delete(event_id)
+	await redisClient.delete(event_id)
 
 
 

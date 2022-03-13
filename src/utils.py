@@ -5,12 +5,12 @@ import asyncio
 import html
 import discord
 from discord.ext import commands
-import redis
+import aioredis
 
 intents = discord.Intents().all()
 TRIVIA_PLAYERS = set()
 bot = commands.Bot(intents=intents)
-redisClient =  redis.Redis(host='localhost', port=6379, db=0)
+redisClient =  aioredis.from_url('redis://localhost', port=6379, db=0)
 
 def days_to_seconds(days):
 	return days * 86400
@@ -88,8 +88,17 @@ async def create_college_fn(guild, college):
 	await creator.add_roles(role)
 	await creator.send(f"Your new college {college_name} has been created!")
 	
+def is_valid_decimal(s):
+    try:
+        float(s)
+    except ValueError:
+        return False
+    else:
+        return True
 
 
+def build_link(chegg_id:str):
+	return f"http://127.0.0.1:5000/chegg/{chegg_id}"
 
 if __name__ == "__main__":
 	loop = asyncio.get_event_loop()

@@ -2,7 +2,6 @@
 from bs4 import BeautifulSoup
 import discord
 import aiohttp
-import asyncio
 from utils import fetch
 
 async def get_libgen_books(query:str):
@@ -20,8 +19,8 @@ async def get_libgen_books(query:str):
 	}
 	async with aiohttp.ClientSession() as session:
 		url = 'https://libgen.rs/search.php'
-		res = fetch(session, url, query)
-		soup = BeautifulSoup(res.text, 'html.parser')
+		res = await fetch(session, url, query)
+		soup = BeautifulSoup(res, 'html.parser')
 		results = soup.find_all('tr')
 		embeds = []
 		for result in results[3:-1]:
@@ -36,7 +35,8 @@ async def get_libgen_books(query:str):
 				title=title,
 				url=link_tags[0]['href']
 			)
-			embed.add_field(name="Author", value=author)
+			if author:
+				embed.add_field(name="Author", value=author)
 			embeds.append(embed)
 			
 		return embeds[:10]

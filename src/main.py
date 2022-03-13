@@ -7,6 +7,8 @@ from pytz import timezone
 import jobsearch.indeed as ind
 import jobsearch.linkedin as lkn
 import books.libgen as libgen
+import Rankcard
+from io import BytesIO
 from db import (
 	get_user_balance, 
 	get_user_rank, 
@@ -25,10 +27,12 @@ from db import (
 )
 
 from views import *
-from xp import assign_xp
+from xp import assign_xp, curr_xp_for_level, get_xp
 from utils import *
-from roles.roles import IGNORE_ROLES, ROLE_TO_SALARY
+from roles.roles import IGNORE_ROLES, ROLE_TO_SALARY, role_or_higher
 from scheduler import *
+import quizlet
+import chegg as chg
 
 index_to_num = {
 	1: "one",
@@ -57,17 +61,17 @@ index_to_unicode = {
 	10:'🔟',
 }
 
-
+rankcard = Rankcard.RANKCARD()
 
 async def college_search(ctx:discord.AutocompleteContext):
 	college_roles = set(map(lambda x: x.name, ctx.interaction.guild.roles)) - IGNORE_ROLES
 	return [college for college in college_roles]
 
 async def giveaway_search(ctx:discord.AutocompleteContext):
-	if not redisClient.exists('giveaways'):
+	if not await redisClient.exists('giveaways'):
 		return []
 	
-	return list(map(lambda x: x.decode('utf-8'), redisClient.smembers('giveaways')))
+	return list(map(lambda x: x.decode('utf-8'), await redisClient.smembers('giveaways')))
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -113,47 +117,48 @@ async def loop_trivia_question():
 		"answers": answers
 		}
 		trivia_json = json.dumps(trivia)
-	redisClient.set("trivia", trivia_json)
-	redisClient.delete("trivia-players")
+	await redisClient.set("trivia", trivia_json)
+	await redisClient.delete("trivia-players")
 	prize = determine_trivia_prize()
-	redisClient.set("trivia-prize", prize)
+	await redisClient.set("trivia-prize", prize)
 
 @tasks.loop(seconds=30)
 async def check_events():
-	events = get_latest_events()
+	events = await get_latest_events()
 	if events:
 		for event in events:
-			channel = bot.get_channel(event[5])
+			channel = bot.get_channel(event.get('channel'))
 			if channel:
-				embed = discord.Embed(title=event[2], description=event[3], color=0xffffff)
-				embed.add_field(name="Hosted by", value=event[4])
-				embed.add_field(name="Date", value=event[6])
-				embed.set_footer(text="Event ID: %s" % event[0])
-				link =  event[7]
+				embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
+				embed.add_field(name="Hosted by", value=event.get('hosted'))
+				embed.add_field(name="Date", value=event.get('date'))
+				embed.set_footer(text="Event ID: %s" % event.get('id'))
+				link =  event.get('link')
 				view = LinkView(link, "Event Link")
 				await channel.send(embed=embed, view=view)
-				scheduler.add_job(notify_event, 'date', run_date=event[6], timezone=timezone('Canada/Mountain'), args=[event[0]])
-				if event[1]:
-					assign_xp(bot, "POST_EVENT", event[1])
+				scheduler.add_job(notify_event, 'date', run_date=event.get('date'), timezone=timezone('Canada/Mountain'), args=[event.get('id')])
+				if event.get('discord_id'):
+					await assign_xp(bot, "POST_EVENT", event.get('discord_id'))
+				
 @tasks.loop(seconds=30)
 async def check_jobs():
-	jobs = get_latest_jobs()
+	jobs = await get_latest_jobs()
 	
 	if jobs:
 		for job in jobs:
-			channel = bot.get_channel(job[7])
+			channel = bot.get_channel(job.get('channel'))
 			if channel:
-				embed = discord.Embed(title=job[3], description=job[4], color=0x00ff00)
-				embed.add_field(name="Organization", value=job[5])
-				embed.add_field(name="Location", value=job[8])
-				embed.add_field(name="Disciplines", value=job[6])
-				embed.set_footer(text="JOB ID: %s" % job[0])
-				link =  job[9]
+				embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ff00)
+				embed.add_field(name="Organization", value=job.get('organization'))
+				embed.add_field(name="Location", value=job.get('location'))
+				embed.add_field(name="Disciplines", value=job.get('disciplines'))
+				embed.set_footer(text="JOB ID: %s" % job.get('id'))
+				link =  job.get('applyurl')
 				view = LinkView(link, "Apply URL")
 
 				await channel.send(embed=embed, view=view)
-				if job[1]:
-					assign_xp(bot, "POST_JOB", job[1])
+				if job.get('discord_id'):
+					assign_xp(bot, "POST_JOB", job.get('discord_id'))
 						
 @bot.event
 async def on_ready():
@@ -181,7 +186,15 @@ async def on_ready():
 	
 	if not check_jobs.is_running():
 		check_jobs.start()
-	
+
+
+@bot.event
+async def on_error(ev_methods):
+	"""
+	This event is called when an error occurs.
+	"""
+	print(ev_methods)
+
 
 @bot.event
 async def on_invite_create(invite):
@@ -215,7 +228,7 @@ async def on_member_join(member):
 	"""
 	This event is called when a member joins the server.
 	"""
-	insert_user(member.id)
+	await insert_user(member.id)
 	invites_after_join = await member.guild.invites()
 
 	for invite in invite_map.values():
@@ -233,7 +246,7 @@ async def ping(ctx):
 
 @bot.slash_command(name="balance", description="Shows the current balance for a user's account", guild_ids=[939394818428243999])
 async def balance(ctx):
-	bal = get_user_balance(ctx.interaction.user.id)
+	bal = await get_user_balance(ctx.interaction.user.id)
 	embed = discord.Embed(
 		title=f"{ctx.interaction.user.name}'s Account",
 		colour=discord.Colour.from_rgb(123, 221, 98),
@@ -244,22 +257,45 @@ async def balance(ctx):
 
 @bot.slash_command(name="rank", description="Shows the ranking for a given user", guild_ids=[939394818428243999])
 async def rank(ctx):
-	rank = get_user_rank(ctx.interaction.user.id)
-	embed = discord.Embed(
-		title=f"{ctx.interaction.user.name}'s Rank",
+	await ctx.defer()	
+	
+	rank = await get_user_rank(ctx.interaction.user.id)
+	total_xp, level = await get_xp_levels(ctx.interaction.user.id)
+	curr_xp = curr_xp_for_level(total_xp, level)
+	next_xp = get_xp(level + 1)
+	avatar_url = ''
+	if not ctx.interaction.user.avatar:
+		dis = int(ctx.interaction.user.discriminator) % 5
+		avatar_url = f'https://cdn.discordapp.com/embed/avatars/{str(dis)}.png'
+	else:
+		avatar_url = ctx.interaction.user.avatar.url
+	card = rankcard.rank_card(
+		username=ctx.interaction.user.name,
+		avatar=avatar_url,
+		level=level,
+		rank=rank,
+		current_xp=curr_xp,
+		custom_background='#202020',
+		xp_color='#1E90FF',
+		next_level_xp=next_xp
 	)
-
+	with BytesIO() as file:
+		card.save(file, "PNG")
+		file.seek(0)
+		f = discord.File(file, filename="rankcard.png")
+		await ctx.send(file=f)
+		await ctx.delete()
 
 @bot.slash_command(name="apply", description="Apply to a certain job given a job id. Use this as an application tracker.", guild_ids=[939394818428243999])
 async def apply(ctx,
 	job_id: Option(int, "Enter the job id to apply")
 ):
-	previous_application = get_previous_application(ctx.interaction.user.id, job_id)
+	previous_application = await get_previous_application(ctx.interaction.user.id, job_id)
 	if previous_application:
 		await ctx.interaction.response.send_message("You have already applied to this job.")
 		return
 	
-	job_name = get_job_name(job_id)
+	job_name = await get_job_name(job_id)
 	if not job_name:
 		await ctx.interaction.response.send_message("There is no job with that id.")
 		return
@@ -269,7 +305,7 @@ async def apply(ctx,
 
 @bot.slash_command(name="salary", description="Shows a user's current salary.", guild_ids=[939394818428243999])
 async def salary(ctx):
-	role = get_role(ctx.interaction.user.id)
+	role = await get_role(ctx.interaction.user.id)
 	embed = discord.Embed(
 		title=f"💸 Your current salary is ${ROLE_TO_SALARY[role]} 💸"
 	)
@@ -278,33 +314,33 @@ async def salary(ctx):
 
 @bot.slash_command(name="applications", description="Show all my current applications", guild_ids=[939394818428243999])
 async def applications(ctx):
-	apps = get_applications(ctx.interaction.user.id)
+	apps = await get_applications(ctx.interaction.user.id)
 	if not apps:
 		await ctx.respond("You have no applications.")
 		return
 	for app in apps:
 		embed = discord.Embed(
-			title=f"{app[0]}",
+			title=f"{app.get('name')}",
 		)
-		embed.add_field(name="Organization", value=app[1])
-		embed.add_field(name="Location", value=app[3])
-		embed.add_field(name="📝Application Date 📝", value=app[4])
-		view = LinkView(app[2], "Apply URL")
+		embed.add_field(name="Organization", value=app.get('organization'))
+		embed.add_field(name="Location", value=app.get('location'))
+		embed.add_field(name="📝Application Date 📝", value=app.get('date').strftime("%Y-%m-%d %H:%M:%S"))
+		view = LinkView(app.get('applyurl'), "Apply URL")
 		await ctx.respond(embed=embed, view=view)
 
 
 @bot.slash_command(name="attend-event" ,description="Attend an event given an event id. You will be given a reminder for the event to start.", guild_ids=[939394818428243999])
 async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 	
-	event_name = get_event_name(event_id)
-	previous_event = redisClient.sismember(str(event_id), str(ctx.interaction.user.id))
+	event_name = await get_event_name(event_id)
+	previous_event = await redisClient.sismember(str(event_id), str(ctx.interaction.user.id))
 	if previous_event:
 		await ctx.interaction.response.send_message("You have already signed up for this event.")
 		return
 	if not event_name:
 		await ctx.interaction.response.send_message("There is no event with that id.")
 		return
-	redisClient.sadd(str(event_id), str(ctx.interaction.user.id))
+	await redisClient.sadd(str(event_id), str(ctx.interaction.user.id))
 	await assign_xp(bot, "ATTEND_EVENT", ctx.interaction.user.id)
 	await ctx.respond(content="You have successfully signed up to be notified of {}!".format(event_name))
 
@@ -312,7 +348,7 @@ async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 
 @bot.slash_command(name="trivia", description="Play a trivia game to win coins! You can only play once per day.", guild_ids=[939394818428243999])
 async def trivia(ctx):
-	if redisClient.sismember('trivia-players', ctx.interaction.user.id):
+	if await redisClient.sismember('trivia-players', ctx.interaction.user.id):
 		await ctx.interaction.response.send_message("You've already played today! Come back tomorrow to play again.", ephemeral=True)
 		return
 	trivia_message = f"""
@@ -322,6 +358,19 @@ async def trivia(ctx):
 	triviaView.message = await ctx.interaction.response.send_message(trivia_message, ephemeral=True, view=triviaView)
 	triviaView.ctx = ctx
 	
+@bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet", guild_ids=[939394818428243999])
+async def quizlet_search(ctx,
+	query: Option(str, "What are you looking for?")
+):
+	await ctx.defer()
+	embeds = await quizlet.find_content(query)
+	
+	if not embeds:
+		await ctx.send("Nothing was found.")
+		return
+	for embed in embeds:
+		await ctx.send(embed=embed)
+	await ctx.delete()
 
 
 @bot.slash_command(name="assign-xp", description="Assign XP to a user", guild_ids=[939394818428243999])
@@ -336,35 +385,47 @@ async def assign_xp_to_user(ctx,
 @bot.slash_command(name="indeed", description="Search for a job on Indeed", guild_ids=[939394818428243999])
 async def indeed(ctx,
 	title: Option(str, "Enter the job title")):
-	embeds = ind.find_jobs(title)
+	await ctx.defer()
+	embeds = await ind.find_jobs(title)
 	if not embeds:
 		await ctx.respond("No jobs found")
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
+	await ctx.delete()
 
 @bot.slash_command(name="linkedin", description="Search for a job on LinkedIn", guild_ids=[939394818428243999])
 async def linkedin(ctx,
 	title: Option(str, "Enter the job title")):
-	
-	embeds = lkn.find_jobs(title)
+	await ctx.defer()
+	embeds = await lkn.find_jobs(title)
 	if not embeds:
 		await ctx.respond("No jobs found")
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
+	await ctx.delete()
 
+@bot.slash_command(name="chegg", description="Convert's chegg link to unblocked content.", guild_ids=[939394818428243999])
+@permissions.has_any_role(*role_or_higher("Professor"))
+async def chegg(ctx,
+	link: Option(str, "Enter the chegg link")):
+	await ctx.defer()
+	chegg_link = await chg.convert_link(link)
+	view = LinkView(chegg_link, "View Your Chegg")
+	await ctx.respond(view=view)
 
 @bot.slash_command(name="books", description="Search for a book or textbook with LibGen", guild_ids=[939394818428243999])
 async def books(ctx,
 	title: Option(str, "Enter the book name or author")):
+	await ctx.defer()
 	embeds = await libgen.get_libgen_books(title)
 	if not embeds:
 		await ctx.respond("No books found")
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
-
+	await ctx.delete()
 
 ##################################
 #College Commands 
@@ -436,29 +497,35 @@ description="Commands for running and entering giveaways")
 
 @giveaway.command(name="start", description="Start a giveaway", guild_ids=[939394818428243999])
 async def start_giveaway(ctx):
+	
+	def auth_check(m):
+		return m.author == ctx.interaction.user
 
 	def num_check (m):
-		return m.author == ctx.interaction.user and m.content.isdigit()
+		return m.author == ctx.interaction.user and is_valid_decimal(m.content)
 
 	try:
 		await ctx.delete()
 		await ctx.respond(f"Hello {ctx.interaction.user.mention}, what is the name of your giveaway?")
-		giveaway_name = await bot.wait_for('message', timeout=60)
+		giveaway_name = await bot.wait_for('message', timeout=60,  check=auth_check)
 		await ctx.respond(f"What is the prize for the giveaway?")
-		giveaway_prize = await bot.wait_for('message', timeout=60, )
+		giveaway_prize = await bot.wait_for('message', timeout=60, check=auth_check)
 		await ctx.respond(f"How many winners do you want?")
 		giveaway_winners = await bot.wait_for('message', timeout=60,check=num_check)
 		await ctx.respond(f"How many hours do you want the giveaway to last?")
 		giveaway_time = await bot.wait_for('message', timeout=60,  check=num_check)
-		await ctx.respond(f"What is the description for the giveaway?")
-		giveaway_description = await bot.wait_for('message', timeout=60)
+		await ctx.respond(f"What is the description for the giveaway?", )
+		giveaway_description = await bot.wait_for('message', timeout=60, check=auth_check)
+		await ctx.respond(f"What is the required level to enter the giveaway?")
+		giveaway_level = await bot.wait_for('message', timeout=60, check=num_check)
 		await ctx.channel.purge(limit=14)
 		await ctx.respond(f"Your giveaway has been created and is scheduled to be drawn in {giveaway_time.content} hours.")
 		await create_giveaway(ctx, giveaway_name.content, 
 			giveaway_prize.content, 
 			int(giveaway_winners.content), 
-			int(giveaway_time.content), 
-			giveaway_description.content)
+			float(giveaway_time.content), 
+			giveaway_description.content,
+			int(giveaway_level.content))
 	
 	except asyncio.TimeoutError:
 		await ctx.respond("You took too long to answer a question. Cancelling giveaway.")
@@ -472,12 +539,19 @@ async def enter_giveaway(ctx,
 	autocomplete=giveaway_search),
 	entries: Option(int, "Enter the number of entries. Defaults to 1", default=1)):
 	entry_count = await get_entries(ctx.interaction.user.id)
+	_, curr_level = await get_xp_levels(ctx.interaction.user.id)
+	giveaway_obj = await redisClient.get(name)
+	if giveaway_obj:
+		giveaway_obj = json.loads(giveaway_obj)
+		if giveaway_obj['required_level'] > curr_level:
+			await ctx.respond(f"You do not meet the required level to enter this giveaway.")
+			return
 
 	if entry_count < entries:
 		await ctx.respond(f"Sorry, you do not have enough giveaway entries. You have {entry_count} entries.")
 	else:
 		try:
-			giveaway_entry(ctx.interaction.user, name, entries)
+			await giveaway_entry(ctx.interaction.user, name, entries)
 			await ctx.respond(f"You have entered {entries} entries. You now have {entry_count - entries} entries remaining.")
 			await set_entries(ctx.interaction.user.id, entry_count - entries)
 		except Exception as e:

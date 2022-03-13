@@ -104,6 +104,8 @@ def get_level_from_xp(xp:int) -> int:
 	i = 1 
 	while xp > get_xp_total(i):
 		i += 1
+		if i > 100:
+			return 100
 	return i - 1
 
 async def show_new_level(bot, level:int, discord_id:int, new_role:bool, role=None):
@@ -125,16 +127,18 @@ async def assign_xp(bot, payload, discord_id:int, xp_amount = 0):
 		xp = ACTION_TO_XP[payload]
 	else:
 		xp = xp_amount
-	total_xp, level = get_xp_levels(discord_id)
+	total_xp, level = await get_xp_levels(discord_id)
+	if level == 100:
+		return
 	total_xp += xp
-	
 	new_level = get_level_from_xp(total_xp)
 	entries = 0
 	if new_level > level:
 		new = False
+		factor = level // 10
 		new_role = None
-		if new_level % 10 == 0:
-			entries = ROLE_TO_ENTRIES[new_level]
+		if new_level // 10 > factor:
+			entries = ROLE_TO_ENTRIES[get_level_to_role(new_level)]
 			new = True
 			old_role = discord.utils.get(bot.guilds[0].roles, name=get_level_to_role(level))
 			new_role = discord.utils.get(bot.guilds[0].roles, name=get_level_to_role(new_level))
@@ -146,7 +150,7 @@ async def assign_xp(bot, payload, discord_id:int, xp_amount = 0):
 
 		
 		await show_new_level(bot, new_level, discord_id, new, new_role)
-	set_xp_levels(discord_id, total_xp, new_level, entries=entries)
+	await set_xp_levels(discord_id, total_xp, new_level, entries=entries)
 
 
 def xp_to_next_level(xp:int) -> int:

@@ -23,7 +23,7 @@ class EventButton(discord.ui.Button):
 		self.id = event_id
 		self.name = event_name
 	async def callback(self, interaction):
-		redisClient.rpush(self.id, interaction.user.id)
+		await redisClient.rpush(self.id, interaction.user.id)
 		await assign_xp(bot, "ATTEND_EVENT", interaction.user.id)
 		await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(self.name))
 
@@ -62,7 +62,7 @@ class TriviaView(discord.ui.View):
 
 	@discord.ui.button(label="Start",style=discord.ButtonStyle.primary)
 	async def callback(self, button, interaction):
-		trivia = json.loads(redisClient.get("trivia"))
+		trivia = json.loads(await redisClient.get("trivia"))
 		question, correct, answers = trivia['question'], trivia['correct'], trivia['answers']
 		
 		answers.append(correct)
@@ -75,7 +75,7 @@ class TriviaView(discord.ui.View):
 			answerView.add_item(button)
 		
 		await interaction.response.edit_message(content=question, view=answerView)
-		redisClient.sadd("trivia-players", str(interaction.user.id))
+		await redisClient.sadd("trivia-players", str(interaction.user.id))
 		
 
 class AnswerView(discord.ui.View):
@@ -94,10 +94,10 @@ class TriviaButton(discord.ui.Button):
 
 	async def callback(self, interaction):
 		correct = self.custom_id.split(" ")[1]
-		prize = int(redisClient.get('trivia-prize'))
+		prize = int(await redisClient.get('trivia-prize'))
 		if correct == self.label:
 			await interaction.response.edit_message(content="That's correct! You've just won ${} coins! Come back tomorrow to play again.".format(prize), view=None)
-			set_user_balance(prize, interaction.user.id)
+			await set_user_balance(prize, interaction.user.id)
 		else:
 			await interaction.response.edit_message(content="That's incorrect! The correct answer is {}. You could have won ${} coins. Come back tomorrow to play again.".format(correct, prize), view=None)
 		await assign_xp(bot, "TRIVIA", interaction.user.id)

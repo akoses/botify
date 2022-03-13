@@ -17,5 +17,12 @@ asyncio = "*"
 schedule = "*"
 redis = "*"
 apscheduler = "*"
+requests-html = "*"
+selenium = "*"
+aioredis = "*"
+asyncpg = "*"
+pyppeteer = "*"
+flask = {extras = ["async"], version = "*"}
+rankcard = {editable = true, git = "https://github.com/akoses/Python-discord-rankcard.git"}
 
 [dev-packages]
