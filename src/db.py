@@ -91,8 +91,15 @@ async def create_tables():
 			date TIMESTAMP,
 			link TEXT);""")
 	
+	await conn.execute("""CREATE EXTENSION "uuid-ossp";""")
+
+	await conn.execute("""CREATE TABLE IF NOT EXISTS chegg(
+		id uuid PRIMARY KEY DEFAULT uuid_generate_v4(), 
+		created_at TIMESTAMPTZ DEFAULT NOW(), 
+		html TEXT);""")
 
 
+	await conn.close()
 	await conn.close()
 
 
