@@ -1,10 +1,10 @@
-import requests
 from bs4 import BeautifulSoup
-import urllib.parse
 import discord
 import aiohttp
+import sys
+sys.path.append('..')
 from utils import fetch
-
+import asyncio
 async def find_jobs(job_title: str):
 	
 	async with aiohttp.ClientSession() as session:
@@ -33,6 +33,9 @@ async def find_jobs(job_title: str):
 				embed.add_field(name="Company", value=company.text, inline=False)
 				embed.add_field(name="Location", value=location.text, inline=False)
 				embeds.append(embed)
-			
+		print(embeds)
 		return embeds[:5]
 
+if  __name__ == '__main__':
+	loop = asyncio.get_event_loop()
+	loop.run_until_complete(find_jobs('Software Engineer'))
