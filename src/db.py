@@ -64,7 +64,7 @@ async def create_tables():
 				description TEXT,
 				organization TEXT,
 				disciplines TEXT,
-				channels bigint[],
+				channels TEXT[],
 				location TEXT,
 				applyURL TEXT
 				);""")
@@ -84,7 +84,7 @@ async def create_tables():
 			description TEXT,
 			hosted_by TEXT,
 			status TEXT,
-			channels bigint[], 
+			channels TEXT[], 
 			date TIMESTAMP,
 			link TEXT);""")
 	

@@ -135,7 +135,6 @@ async def check_events():
 			if channels:
 				for channel in channels:
 					channel = bot.get_channel(int(channel))
-					print(channel)
 					if channel:
 						embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
 						embed.add_field(name="Hosted by", value=event.get('hosted'), inline=False)
