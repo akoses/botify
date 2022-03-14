@@ -68,7 +68,9 @@ async def end_giveaway(gid):
 	await redisClient.srem('giveaways', gid)
 	entries = giveaway['entries']
 	if len(entries) < 1:
-		await bot.get_channel(939423795763105825).send(content=f"**No one entered {giveaway['name']} so there are no winners! :cry:**")
+		await bot.get_channel(
+			GIVEAWAY_CHANNEL
+		).send(content=f"**No one entered {giveaway['name']} so there are no winners! :cry:**")
 		return
 	entry_weights = map(lambda e: e['entries'], entries)
 
@@ -91,9 +93,9 @@ async def end_giveaway(gid):
 		embeds.append(embed)
 
 	if len(embeds) > 0:	
-		await bot.get_channel(939423795763105825).send(content=f"**Winner of {giveaway['name']}**", embed=embeds[0])
+		await bot.get_channel(GIVEAWAY_CHANNEL).send(content=f"**Winner of {giveaway['name']}**", embed=embeds[0])
 	else:
-		await bot.get_channel(939423795763105825).send(content=f"Winners of {giveaway['name']}", embeds=embeds)
+		await bot.get_channel(GIVEAWAY_CHANNEL).send(content=f"Winners of {giveaway['name']}", embeds=embeds)
 	
 		
 async def notify_event(event_id):
