@@ -138,7 +138,7 @@ async def check_events():
 					embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
 					embed.add_field(name="Hosted by", value=event.get('hosted'), inline=False)
 					embed.add_field(name="Date", value=event.get('date'), inline=False)
-					embed.set_footer(text="Event ID: %s" % event.get('id'),inline=False)
+					embed.set_footer(text="Event ID: %s" % event.get('id'))
 					link =  event.get('link')
 					view = LinkView(link, "Event Link")
 					view.add_item(EventButton(event.get('id'), event.get('name')))
