@@ -131,40 +131,40 @@ async def check_events():
 	events = await get_latest_events()
 	if events:
 		for event in events:
-			channel = bot.get_channel(event.get('channel'))
-			if channel:
-				embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
-				embed.add_field(name="Hosted by", value=event.get('hosted'), inline=False)
-				embed.add_field(name="Date", value=event.get('date'), inline=False)
-				embed.set_footer(text="Event ID: %s" % event.get('id'),inline=False)
-				link =  event.get('link')
-				view = LinkView(link, "Event Link")
-				view.add_item(EventButton(event.get('id'), event.get('name')))
-				await channel.send(embed=embed, view=view)
-				scheduler.add_job(notify_event, 'date', run_date=event.get('date'), timezone=timezone('Canada/Mountain'), args=[event.get('id')])
-				if event.get('discord_id'):
-					await assign_xp(bot, "POST_EVENT", event.get('discord_id'))
-				
+			channels = bot.get_channel(event.get('channels'))
+			if channels:
+				for channel in channels:
+					embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
+					embed.add_field(name="Hosted by", value=event.get('hosted'), inline=False)
+					embed.add_field(name="Date", value=event.get('date'), inline=False)
+					embed.set_footer(text="Event ID: %s" % event.get('id'),inline=False)
+					link =  event.get('link')
+					view = LinkView(link, "Event Link")
+					view.add_item(EventButton(event.get('id'), event.get('name')))
+					await channel.send(embed=embed, view=view)
+					scheduler.add_job(notify_event, 'date', run_date=event.get('date'), timezone=timezone('Canada/Mountain'), args=[event.get('id')])
+					
+					
 @tasks.loop(seconds=30)
 async def check_jobs():
 	jobs = await get_latest_jobs()
 	
 	if jobs:
 		for job in jobs:
-			channel = bot.get_channel(job.get('channel'))
-			if channel:
-				embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ff00)
-				embed.add_field(name="Organization", value=job.get('organization'), inline=False)
-				embed.add_field(name="Location", value=job.get('location'), inline=False)
-				embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
-				embed.set_footer(text="JOB ID: %s" % job.get('id'))
-				link =  job.get('applyurl')
-				view = LinkView(link, "Apply URL")
-				view.add_item(JobButton(job.get('id'), job.get('name')))
-				await channel.send(embed=embed, view=view)
-				if job.get('discord_id'):
-					await assign_xp(bot, "POST_JOB", job.get('discord_id'))
-						
+			channels = bot.get_channel(job.get('channels'))
+			if channels:
+				for channel in channels:
+					embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ff00)
+					embed.add_field(name="Organization", value=job.get('organization'), inline=False)
+					embed.add_field(name="Location", value=job.get('location'), inline=False)
+					embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
+					embed.set_footer(text="JOB ID: %s" % job.get('id'))
+					link =  job.get('applyurl')
+					view = LinkView(link, "Apply URL")
+					view.add_item(JobButton(job.get('id'), job.get('name')))
+					await channel.send(embed=embed, view=view)
+					
+							
 @bot.event
 async def on_ready():
 	"""
