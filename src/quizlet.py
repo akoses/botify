@@ -14,7 +14,7 @@ async def find_content(question:str):
 	}
 	
 	query = urllib.parse.urlencode(params)
-	browser = await launch()
+	browser = await launch(options={'args': ['--no-sandbox']})
 	page = await browser.newPage()
 	await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
 	url = base_url+'?'+ query
