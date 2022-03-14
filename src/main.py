@@ -131,9 +131,10 @@ async def check_events():
 	events = await get_latest_events()
 	if events:
 		for event in events:
-			channels = bot.get_channel(event.get('channels'))
+			channels = event.get('channels')
 			if channels:
 				for channel in channels:
+					channel = bot.get_channel(channel)
 					embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
 					embed.add_field(name="Hosted by", value=event.get('hosted'), inline=False)
 					embed.add_field(name="Date", value=event.get('date'), inline=False)
@@ -151,9 +152,10 @@ async def check_jobs():
 	
 	if jobs:
 		for job in jobs:
-			channels = bot.get_channel(job.get('channels'))
+			channels = job.get('channels')
 			if channels:
 				for channel in channels:
+					channel = bot.get_channel(channel)
 					embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ff00)
 					embed.add_field(name="Organization", value=job.get('organization'), inline=False)
 					embed.add_field(name="Location", value=job.get('location'), inline=False)
