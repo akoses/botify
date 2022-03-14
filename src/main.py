@@ -132,6 +132,7 @@ async def check_events():
 	if events:
 		for event in events:
 			channels = event.get('channels')
+			print(channels)
 			if channels:
 				for channel in channels:
 					channel = bot.get_channel(channel)
