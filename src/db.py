@@ -59,13 +59,12 @@ async def create_tables():
 
 	await conn.execute("""CREATE TABLE IF NOT EXISTS jobs(                                                              
 				id SERIAL PRIMARY KEY,                                                                           
-				discord_id bigint,
 				status TEXT,
 				name TEXT,
 				description TEXT,
 				organization TEXT,
 				disciplines TEXT,
-				channel bigint,
+				channels bigint[],
 				location TEXT,
 				applyURL TEXT
 				);""")
@@ -79,15 +78,13 @@ async def create_tables():
 		CONSTRAINT fk_discord FOREIGN KEY(discord_id) REFERENCES users(discord_id) ON DELETE CASCADE);""")
 
 	
-
-	await conn.execute("""CREATE TABLE IF NOT EXISTS events(                                                                
+	await conn.execute("""CREATE TABLE IF NOT EXISTS events (                                                                
 			id SERIAL PRIMARY KEY,                                                                           
-			discord_id bigint,
 			name TEXT,
 			description TEXT,
 			hosted_by TEXT,
 			status TEXT,
-			channel bigint, 
+			channels bigint[], 
 			date TIMESTAMP,
 			link TEXT);""")
 	

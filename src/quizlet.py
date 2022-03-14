@@ -11,8 +11,8 @@ async def find_content(question:str):
 	params = {
 		'query':question,
 		'type':'sets',
-
 	}
+	
 	query = urllib.parse.urlencode(params)
 	browser = await launch(options={'args': ['--no-sandbox']})
 	page = await browser.newPage()
