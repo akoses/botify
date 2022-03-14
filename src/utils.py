@@ -98,7 +98,7 @@ def is_valid_decimal(s):
 
 
 def build_link(chegg_id:str):
-	return f"http://127.0.0.1:5000/chegg/{chegg_id}"
+	return f"https://botify.akose.ca/chegg/{chegg_id}"
 
 if __name__ == "__main__":
 	loop = asyncio.get_event_loop()
