@@ -158,7 +158,7 @@ async def check_jobs():
 				for channel in channels:
 					if channel:
 						channel = bot.get_channel(int(channel))
-						embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ff00)
+						embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0xffffff)
 						embed.add_field(name="Organization", value=job.get('organization'), inline=False)
 						embed.add_field(name="Location", value=job.get('location'), inline=False)
 						embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
