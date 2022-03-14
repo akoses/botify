@@ -473,7 +473,7 @@ async def join(ctx,
 ):	
 	college_roles = set(map(lambda x: x.name, ctx.interaction.guild.roles)) - IGNORE_ROLES
 	role = discord.utils.get(ctx.interaction.guild.roles, name=college)
-	if role.name in college_roles:
+	if role and role.name in college_roles:
 		await ctx.interaction.user.add_roles(role)
 		await ctx.respond(f"You have now joined the {college} college!")
 	else:
