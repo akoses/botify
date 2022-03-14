@@ -17,7 +17,8 @@ ROLE_TO_LEVEL = {
 	"Drop Out":0
 }
 
-ROLE_TO_ID ={
+ROLE_TO_ID = {
+
 	"Chancellor": 950211602169364480,
 	"President": 950211602865602671,
 	"Vice President": 950211603721248779,

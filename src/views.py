@@ -1,8 +1,11 @@
 import discord
+import os
 from utils import *
 from xp import assign_xp
 from db import *
 import json
+
+TRIVIA_CHANNEL = int(os.getenv('TRIVIA_CHANNEL'))
 
 class LinkView(discord.ui.View):
 	def __init__(self, url, label, timeout=None):
@@ -18,26 +21,48 @@ class EventButton(discord.ui.Button):
 	def __init__(self, event_id, event_name):
 		super().__init__(
 			label="Attend Event",
-			style=discord.enums.ButtonStyle.primary
+			style=discord.enums.ButtonStyle.primary,
+			custom_id=str(event_id),
 		)
 		self.id = event_id
 		self.name = event_name
+	
 	async def callback(self, interaction):
-		await redisClient.rpush(self.id, interaction.user.id)
+		if await redisClient.sismember('interaction-ids', str(interaction.id)):
+			return
+		await redisClient.sadd('interaction-ids', str(interaction.id))
+		if await redisClient.sismember(str(self.id), interaction.user.id):
+			await interaction.user.send("You have already registered for this event.")
+			return
+		await redisClient.sadd(str(self.id), interaction.user.id)
+		event_type = {"TYPE":"EVENT", "NAME": self.name}
+		await redisClient.hmset("type-"+ str(self.id), event_type)
 		await assign_xp(bot, "ATTEND_EVENT", interaction.user.id)
+	
 		await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(self.name))
-
+		
 class JobButton(discord.ui.Button):
 	def __init__(self, job_id, job_name):
 		super().__init__(
 			label="Track Application",
 			style=discord.enums.ButtonStyle.primary, 
+			custom_id=str(job_id),
 		)
 		self.id = job_id
 		self.name = job_name
 	async def callback(self, interaction):
+		if await redisClient.sismember('interaction-ids', str(interaction.id)):
+			return
+		await redisClient.sadd('interaction-ids', str(interaction.id))
+		previous_application = await get_previous_application(interaction.user.id, self.id)
+		
+		if previous_application:
+			await interaction.user.send("You have already applied to {}.".format(self.name))
+			return
 		await assign_xp(bot, "APPLY", interaction.user.id)
 		await apply_to_job(interaction.user.id, self.id)
+		job_type = {"TYPE":"JOB","NAME": self.name}
+		await redisClient.hmset("type-"+ str(self.id), job_type)
 		await interaction.user.send(content=f"You have successfully tracked the role {self.name}! You can check your other applications using the `/applications` command.")
 
 
@@ -88,18 +113,18 @@ class TriviaButton(discord.ui.Button):
 		super().__init__(
             label=answer,
             style=discord.enums.ButtonStyle.secondary,
-            custom_id=f'{index} {correct}',
         )
-
+		self.correct = correct
 
 	async def callback(self, interaction):
-		correct = self.custom_id.split(" ")[1]
 		prize = int(await redisClient.get('trivia-prize'))
-		if correct == self.label:
+		if self.correct == self.label:
 			await interaction.response.edit_message(content="That's correct! You've just won ${} coins! Come back tomorrow to play again.".format(prize), view=None)
+			await bot.get_channel(TRIVIA_CHANNEL).send(content="{} got the trivia question of the day correct!".format(interaction.user.mention))
 			await set_user_balance(prize, interaction.user.id)
 		else:
-			await interaction.response.edit_message(content="That's incorrect! The correct answer is {}. You could have won ${} coins. Come back tomorrow to play again.".format(correct, prize), view=None)
+			await interaction.response.edit_message(content="That's incorrect! The correct answer is {}. You could have won ${} coins. Come back tomorrow to play again.".format(self.correct, prize), view=None)
+			await bot.get_channel(TRIVIA_CHANNEL).send(content="Oof {} got the trivia question of the day wrong.".format(interaction.user.mention))
 		await assign_xp(bot, "TRIVIA", interaction.user.id)
 		
 

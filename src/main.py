@@ -9,6 +9,9 @@ import jobsearch.linkedin as lkn
 import books.libgen as libgen
 import Rankcard
 from io import BytesIO
+import inspect
+
+
 from db import (
 	get_user_balance, 
 	get_user_rank, 
@@ -48,6 +51,7 @@ index_to_num = {
 }
 
 
+
 index_to_unicode = {
 	1:  '1️⃣',
 	2: '2️⃣',
@@ -78,6 +82,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 WELCOME_CHANNEL = os.getenv('WELCOME_CHANNEL')
 ADMIN_ROLE = int(os.getenv('ADMIN_ROLE'))
+POLLS_CHANNEL = int(os.getenv('POLLS_CHANNEL'))
 invite_map = dict()
 
 
@@ -89,7 +94,7 @@ async def get_would_you_rather():
 		for i, answer in enumerate(answers):
 			embed.add_field(name = f':{index_to_num[i + 1]}:',  value=answer, inline=False)
 		
-		curr_mess = await bot.get_channel(939423795763105825).send(embed=embed)
+		curr_mess = await bot.get_channel(POLLS_CHANNEL).send(embed=embed)
 		for i in range(len(answers)):
 			emoji = index_to_unicode[i + 1]
 			await curr_mess.add_reaction(emoji)
@@ -104,7 +109,6 @@ async def pay_salaries():
 		await add_salaries(members)
 		print("All salaries paid for role: %s" % role)
 		
-
 
 @tasks.loop(time=[datetime.time(hour=7, minute=0, second=0)], reconnect=True)
 async def loop_trivia_question():
@@ -130,11 +134,12 @@ async def check_events():
 			channel = bot.get_channel(event.get('channel'))
 			if channel:
 				embed = discord.Embed(title=event.get('name'), description=event.get('description'), color=0xffffff)
-				embed.add_field(name="Hosted by", value=event.get('hosted'))
-				embed.add_field(name="Date", value=event.get('date'))
-				embed.set_footer(text="Event ID: %s" % event.get('id'))
+				embed.add_field(name="Hosted by", value=event.get('hosted'), inline=False)
+				embed.add_field(name="Date", value=event.get('date'), inline=False)
+				embed.set_footer(text="Event ID: %s" % event.get('id'),inline=False)
 				link =  event.get('link')
 				view = LinkView(link, "Event Link")
+				view.add_item(EventButton(event.get('id'), event.get('name')))
 				await channel.send(embed=embed, view=view)
 				scheduler.add_job(notify_event, 'date', run_date=event.get('date'), timezone=timezone('Canada/Mountain'), args=[event.get('id')])
 				if event.get('discord_id'):
@@ -149,16 +154,16 @@ async def check_jobs():
 			channel = bot.get_channel(job.get('channel'))
 			if channel:
 				embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ff00)
-				embed.add_field(name="Organization", value=job.get('organization'))
-				embed.add_field(name="Location", value=job.get('location'))
-				embed.add_field(name="Disciplines", value=job.get('disciplines'))
+				embed.add_field(name="Organization", value=job.get('organization'), inline=False)
+				embed.add_field(name="Location", value=job.get('location'), inline=False)
+				embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
 				embed.set_footer(text="JOB ID: %s" % job.get('id'))
 				link =  job.get('applyurl')
 				view = LinkView(link, "Apply URL")
-
+				view.add_item(JobButton(job.get('id'), job.get('name')))
 				await channel.send(embed=embed, view=view)
 				if job.get('discord_id'):
-					assign_xp(bot, "POST_JOB", job.get('discord_id'))
+					await assign_xp(bot, "POST_JOB", job.get('discord_id'))
 						
 @bot.event
 async def on_ready():
@@ -188,13 +193,6 @@ async def on_ready():
 		check_jobs.start()
 
 
-@bot.event
-async def on_error(ev_methods):
-	"""
-	This event is called when an error occurs.
-	"""
-	print(ev_methods)
-
 
 @bot.event
 async def on_invite_create(invite):
@@ -203,6 +201,42 @@ async def on_invite_create(invite):
 	"""
 	invite_map[invite.code] = invite
 
+@bot.event
+async def on_interaction(interaction):
+
+	if str(interaction.type) == "InteractionType.application_command":
+		await bot.process_application_commands(interaction)
+	if interaction.message:
+		components = interaction.message.components
+		if components and len(components[0].children) == 2:
+
+			await interaction.response.defer()
+			button = components[0].children[1]
+
+			component_id = button.custom_id
+			if await redisClient.sismember('interaction-ids', str(interaction.id)):
+				return
+			interaction_type = await redisClient.hget("type-"+component_id, "TYPE")
+			if interaction_type:
+				interaction_type = interaction_type.decode("utf-8") 
+				if interaction_type == "EVENT":
+					event_name = await redisClient.hget("type-"+component_id, "NAME")
+					if await redisClient.sismember(component_id, interaction.user.id):
+						await interaction.user.send("You have already registered for this event.")
+						return
+					await assign_xp(bot, "ATTEND_EVENT", interaction.user.id)
+					await redisClient.sadd(component_id, interaction.user.id)
+
+					await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(event_name.decode("utf-8")))
+				elif interaction_type == "JOB":
+					job_name = await redisClient.hget("type-"+component_id, "NAME")
+					previous_application = await get_previous_application(interaction.user.id, int(component_id))
+					if previous_application:
+						await interaction.user.send("You have already applied to this job.")
+						return
+					await apply_to_job(interaction.user.id, int(component_id))
+					await assign_xp(bot, "APPLY", interaction.user.id)
+					await interaction.user.send(content="You have successfully applied to {}!".format(job_name))
 
 @bot.event
 async def on_invite_delete(invite):
@@ -322,9 +356,9 @@ async def applications(ctx):
 		embed = discord.Embed(
 			title=f"{app.get('name')}",
 		)
-		embed.add_field(name="Organization", value=app.get('organization'))
-		embed.add_field(name="Location", value=app.get('location'))
-		embed.add_field(name="📝Application Date 📝", value=app.get('date').strftime("%Y-%m-%d %H:%M:%S"))
+		embed.add_field(name="Organization", value=app.get('organization'), inline=False)
+		embed.add_field(name="Location", value=app.get('location'), inline=False)
+		embed.add_field(name="📝Application Date 📝", value=app.get('date').strftime("%Y-%m-%d %H:%M:%S"), inline=False)
 		view = LinkView(app.get('applyurl'), "Apply URL")
 		await ctx.respond(embed=embed, view=view)
 

@@ -264,7 +264,7 @@ async def get_previous_application(user_id, job_id):
 
 	conn = await connect()
 
-	rows = await conn.fetch("SELECT * FROM jobs WHERE id = $1 AND discord_id= $2", job_id, user_id)
+	rows = await conn.fetch("SELECT * FROM apply WHERE jobs_id = $1 AND discord_id= $2", job_id, user_id)
 
 	return rows
 

@@ -3,17 +3,19 @@ import random
 import discord
 import datetime
 from pytz import timezone
-from utils import *
-from db import get_event
+import os
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.redis import RedisJobStore
+
+from utils import *
+from db import get_event
 
 jobstores = {
 	'default': RedisJobStore(),
 }
 
 scheduler = AsyncIOScheduler(event_loop=bot.loop, jobstores=jobstores)
-
+GIVEAWAY_CHANNEL = int(os.getenv('GIVEAWAY_CHANNEL'))
 
 async def create_giveaway(ctx, name, prize, winners, gtime, description, level):
 	giveaway_time = datetime.datetime.now(timezone('Canada/Mountain')) + datetime.timedelta(hours=gtime)
@@ -42,7 +44,7 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description, level):
 	
 	await redisClient.set(name, json.dumps(giveaway_obj, default=str))
 	await redisClient.sadd('giveaways', name)
-	await ctx.channel.send(embed=giveaway)
+	await bot.get_channel(GIVEAWAY_CHANNEL).send(embed=giveaway)
 	
 	scheduler.add_job(end_giveaway, 'date', run_date=giveaway_time, timezone=timezone('Canada/Mountain'), args=[name])
 
