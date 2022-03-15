@@ -1,5 +1,5 @@
 import discord
-from discord.commands import Option, permissions
+from discord.commands import Option
 from discord.ext import commands
 intents = discord.Intents().all()
 bot = commands.Bot(intents=intents)
