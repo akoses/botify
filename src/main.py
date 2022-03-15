@@ -463,7 +463,21 @@ async def join(ctx,
 			print(e)
 	else:
 		await ctx.respond("That college does not exist.")
-	
+
+@colleges.command(name="leave", description="Leave a college", guild_ids=guild_ids)
+async def join(ctx,
+	college: Option(str, "Enter the college name", autocomplete=college_search)
+):	
+	college_roles = set(map(lambda x: x.name, ctx.interaction.guild.roles)) - IGNORE_ROLES
+	role = discord.utils.get(ctx.interaction.guild.roles, name=college)
+	if role and role.name in college_roles:
+		try:
+			await ctx.interaction.user.remove_roles(role)
+			await ctx.respond(f"You have now left {college} college.")
+		except Exception as e:
+			print(e)
+	else:
+		await ctx.respond("That college does not exist.")	
 
 @colleges.command(name="list", description="Shows the available colleges", guild_ids=guild_ids)
 async def display_colleges(ctx):
