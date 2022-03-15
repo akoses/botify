@@ -529,6 +529,7 @@ giveaway = bot.create_group(name="giveaway",
 description="Commands for running and entering giveaways")
 
 @giveaway.command(name="start", description="Start a giveaway",guild_ids=guild_ids)
+@permissions.has_role(ADMIN_ROLE)
 async def start_giveaway(ctx):
 	
 	def auth_check(m):
