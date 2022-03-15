@@ -5,11 +5,10 @@ from discord.commands import Option, permissions
 from discord.ext import tasks
 from pytz import timezone
 import jobsearch.indeed as ind
-import jobsearch.linkedin as lkn
 import books.libgen as libgen
 import Rankcard
 from io import BytesIO
-import inspect
+
 
 
 from db import (
@@ -277,12 +276,12 @@ async def on_member_join(member):
 			role = discord.utils.get(member.guild.roles, name="Lower Year Student")
 			await member.add_roles(role)
 
-@bot.slash_command(name="ping", description="Pong!", guild_ids=[939394818428243999])
+@bot.slash_command(name="ping", description="Pong!")
 async def ping(ctx):
 	await ctx.respond('Pong!')
 
 
-@bot.slash_command(name="balance", description="Shows the current balance for a user's account", guild_ids=[939394818428243999])
+@bot.slash_command(name="balance", description="Shows the current balance for a user's account")
 async def balance(ctx):
 	bal = await get_user_balance(ctx.interaction.user.id)
 	embed = discord.Embed(
@@ -293,7 +292,7 @@ async def balance(ctx):
 	await ctx.interaction.response.send_message(embed=embed, ephemeral=True)
 
 
-@bot.slash_command(name="rank", description="Shows the ranking for a given user", guild_ids=[939394818428243999])
+@bot.slash_command(name="rank", description="Shows the ranking for a given user")
 async def rank(ctx):
 	await ctx.defer()	
 	
@@ -324,7 +323,7 @@ async def rank(ctx):
 		await ctx.send(file=f)
 		await ctx.delete()
 
-@bot.slash_command(name="apply", description="Apply to a certain job given a job id. Use this as an application tracker.", guild_ids=[939394818428243999])
+@bot.slash_command(name="apply", description="Apply to a certain job given a job id. Use this as an application tracker.")
 async def apply(ctx,
 	job_id: Option(int, "Enter the job id to apply")
 ):
@@ -341,7 +340,7 @@ async def apply(ctx,
 	await apply_to_job(ctx.interaction.user.id, job_id)
 	await assign_xp(bot, "APPLY", ctx.interaction.user.id)	
 
-@bot.slash_command(name="salary", description="Shows a user's current salary.", guild_ids=[939394818428243999])
+@bot.slash_command(name="salary", description="Shows a user's current salary.")
 async def salary(ctx):
 	role = await get_role(ctx.interaction.user.id)
 	embed = discord.Embed(
@@ -350,7 +349,7 @@ async def salary(ctx):
 	await ctx.respond(embed=embed)
 
 
-@bot.slash_command(name="applications", description="Show all my current applications", guild_ids=[939394818428243999])
+@bot.slash_command(name="applications", description="Show all my current applications")
 async def applications(ctx):
 	apps = await get_applications(ctx.interaction.user.id)
 	if not apps:
@@ -367,7 +366,7 @@ async def applications(ctx):
 		await ctx.respond(embed=embed, view=view)
 
 
-@bot.slash_command(name="attend-event" ,description="Attend an event given an event id. You will be given a reminder for the event to start.", guild_ids=[939394818428243999])
+@bot.slash_command(name="attend-event" ,description="Attend an event given an event id. You will be given a reminder for the event to start.")
 async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 	
 	event_name = await get_event_name(event_id)
@@ -384,7 +383,7 @@ async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 
 
 
-@bot.slash_command(name="trivia", description="Play a trivia game to win coins! You can only play once per day.", guild_ids=[939394818428243999])
+@bot.slash_command(name="trivia", description="Play a trivia game to win coins! You can only play once per day.")
 async def trivia(ctx):
 	if await redisClient.sismember('trivia-players', ctx.interaction.user.id):
 		await ctx.interaction.response.send_message("You've already played today! Come back tomorrow to play again.", ephemeral=True)
@@ -396,7 +395,7 @@ async def trivia(ctx):
 	triviaView.message = await ctx.interaction.response.send_message(trivia_message, ephemeral=True, view=triviaView)
 	triviaView.ctx = ctx
 	
-@bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet", guild_ids=[939394818428243999])
+@bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet")
 async def quizlet_search(ctx,
 	query: Option(str, "What are you looking for?")
 ):
@@ -411,7 +410,7 @@ async def quizlet_search(ctx,
 	await ctx.delete()
 
 
-@bot.slash_command(name="assign-xp", description="Assign XP to a user", guild_ids=[939394818428243999])
+@bot.slash_command(name="assign-xp", description="Assign XP to a user")
 @permissions.has_role(ADMIN_ROLE)
 async def assign_xp_to_user(ctx,
 	xp: Option(int, "Enter the amount of XP to assign"),
@@ -420,7 +419,7 @@ async def assign_xp_to_user(ctx,
 	await ctx.respond(f"Assigned {xp} XP to {user.name}")
 
 
-@bot.slash_command(name="indeed", description="Search for a job on Indeed", guild_ids=[939394818428243999])
+@bot.slash_command(name="indeed", description="Search for a job on Indeed")
 async def indeed(ctx,
 	title: Option(str, "Enter the job title")):
 	await ctx.defer()
@@ -432,19 +431,8 @@ async def indeed(ctx,
 			await ctx.respond(embed=embed)
 		await ctx.delete()
 
-@bot.slash_command(name="linkedin", description="Search for a job on LinkedIn", guild_ids=[939394818428243999])
-async def linkedin(ctx,
-	title: Option(str, "Enter the job title")):
-	await ctx.defer()
-	embeds = await lkn.find_jobs(title)
-	if not embeds:
-		await ctx.respond("No jobs found")
-	else:
-		for embed in embeds:
-			await ctx.respond(embed=embed)
-		await ctx.delete()
 
-@bot.slash_command(name="chegg", description="Convert's chegg link to unblocked content.", guild_ids=[939394818428243999])
+@bot.slash_command(name="chegg", description="Convert's chegg link to unblocked content.")
 @permissions.has_any_role(*role_or_higher("Professor"))
 async def chegg(ctx,
 	link: Option(str, "Enter the chegg link")):
@@ -453,7 +441,7 @@ async def chegg(ctx,
 	view = LinkView(chegg_link, "View Your Chegg")
 	await ctx.respond(view=view)
 
-@bot.slash_command(name="books", description="Search for a book or textbook with LibGen", guild_ids=[939394818428243999])
+@bot.slash_command(name="books", description="Search for a book or textbook with LibGen")
 async def books(ctx,
 	title: Option(str, "Enter the book name or author")):
 	await ctx.defer()
@@ -471,7 +459,7 @@ async def books(ctx,
 colleges = bot.create_group(name="colleges",
 description="Commands for displaying and joining colleges")
 
-@colleges.command(name="join", description="Join a college", guild_ids=[939394818428243999])
+@colleges.command(name="join", description="Join a college")
 async def join(ctx,
 	college: Option(str, "Enter the college name", autocomplete=college_search)
 ):	
@@ -484,7 +472,7 @@ async def join(ctx,
 		await ctx.respond("That college does not exist.")
 	
 
-@colleges.command(name="list", description="Shows the available colleges", guild_ids=[939394818428243999])
+@colleges.command(name="list", description="Shows the available colleges")
 async def display_colleges(ctx):
 	college_roles = set(map(lambda x: x.name, ctx.interaction.guild.roles)) - IGNORE_ROLES
 	embed = discord.Embed(
@@ -495,7 +483,7 @@ async def display_colleges(ctx):
 		embed.add_field(name=role, value=f"`/colleges join {role}`", inline=False)
 	await ctx.respond(embed=embed)
 
-@colleges.command(name="create", description="Request to create a new college", guild_ids=[939394818428243999])
+@colleges.command(name="create", description="Request to create a new college")
 async def create_college(ctx):
 	try:
 		await ctx.respond("What is the name of the college you would like to create?")
@@ -533,7 +521,7 @@ async def create_college(ctx):
 giveaway = bot.create_group(name="giveaway",
 description="Commands for running and entering giveaways")
 
-@giveaway.command(name="start", description="Start a giveaway", guild_ids=[939394818428243999])
+@giveaway.command(name="start", description="Start a giveaway")
 async def start_giveaway(ctx):
 	
 	def auth_check(m):
@@ -571,7 +559,7 @@ async def start_giveaway(ctx):
 	
 
 
-@giveaway.command(name="enter", description="Enter a giveaway",  guild_ids=[939394818428243999])
+@giveaway.command(name="enter", description="Enter a giveaway")
 async def enter_giveaway(ctx, 
 	name:Option(str, "Enter the name of the giveaway",
 	autocomplete=giveaway_search),
