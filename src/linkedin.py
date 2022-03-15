@@ -13,7 +13,7 @@ async def on_ready():
 	"""
 	print(f'{bot.user.name} has connected to Discord!')
 
-@bot.slash_command(name="linkedin", description="Search for a job on LinkedIn"
+@bot.slash_command(name="linkedin", description="Search for a job on LinkedIn")
 async def linkedin(ctx,
 	title: Option(str, "Enter the job title")):
 	await ctx.defer()

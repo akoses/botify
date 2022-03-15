@@ -85,7 +85,7 @@ POLLS_CHANNEL = int(os.getenv('POLLS_CHANNEL'))
 invite_map = dict()
 
 
-@tasks.loop(time=[datetime.time(hour=4, minute=0, second=0)], reconnect=True)
+@tasks.loop(time=[datetime.time(hour=3, minute=0, second=0)], reconnect=True)
 async def get_would_you_rather():
 	question, answers = await get_poll()
 	if question and answers:
@@ -98,7 +98,7 @@ async def get_would_you_rather():
 			emoji = index_to_unicode[i + 1]
 			await curr_mess.add_reaction(emoji)
 
-@tasks.loop(time=[datetime.time(hour=7, minute=0, second=0)])
+@tasks.loop(time=[datetime.time(hour=6, minute=0, second=0)])
 async def pay_salaries():
 	for role in ROLE_TO_SALARY:
 		salary = ROLE_TO_SALARY[role]
@@ -109,7 +109,7 @@ async def pay_salaries():
 		print("All salaries paid for role: %s" % role)
 		
 
-@tasks.loop(time=[datetime.time(hour=7, minute=0, second=0)], reconnect=True)
+@tasks.loop(time=[datetime.time(hour=6, minute=0, second=0)], reconnect=True)
 async def loop_trivia_question():
 	question, correct, answers = await get_trivia_question()
 	
