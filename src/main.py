@@ -83,7 +83,7 @@ ADMIN_ROLE = int(os.getenv('ADMIN_ROLE'))
 POLLS_CHANNEL = int(os.getenv('POLLS_CHANNEL'))
 invite_map = dict()
 
-guild_ids = []
+guild_ids = [939394818428243999]
 
 @tasks.loop(time=[datetime.time(hour=3, minute=0, second=0)], reconnect=True)
 async def get_would_you_rather():
