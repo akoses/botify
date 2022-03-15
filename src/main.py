@@ -465,7 +465,7 @@ async def join(ctx,
 		await ctx.respond("That college does not exist.")
 
 @colleges.command(name="leave", description="Leave a college", guild_ids=guild_ids)
-async def join(ctx,
+async def leave(ctx,
 	college: Option(str, "Enter the college name", autocomplete=college_search)
 ):	
 	college_roles = set(map(lambda x: x.name, ctx.interaction.guild.roles)) - IGNORE_ROLES
