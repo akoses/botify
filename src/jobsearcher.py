@@ -44,5 +44,4 @@ async def indeed(ctx,
 		await ctx.delete()
 
 
-
 bot.run(TOKEN)

@@ -294,7 +294,7 @@ async def balance(ctx):
 	await ctx.interaction.response.send_message(embed=embed, ephemeral=True)
 
 
-@bot.slash_command(name="rank", description="Shows the ranking for a given user")
+@bot.slash_command(name="rank", description="Shows the ranking for a given user",guild_ids=guild_ids)
 async def rank(ctx):
 	await ctx.defer()	
 	
