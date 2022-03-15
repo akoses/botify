@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from discord.commands import Option, permissions
 from discord.ext import tasks
 from pytz import timezone
-import jobsearch.indeed as ind
 import books.libgen as libgen
 import Rankcard
 from io import BytesIO
@@ -421,18 +420,6 @@ async def assign_xp_to_user(ctx,
 	await assign_xp(bot, xp, user.id, xp)
 	await ctx.respond(f"Assigned {xp} XP to {user.name}")
 
-
-@bot.slash_command(name="indeed", description="Search for a job on Indeed",guild_ids=guild_ids)
-async def indeed(ctx,
-	title: Option(str, "Enter the job title")):
-	await ctx.defer()
-	embeds = await ind.find_jobs(title)
-	if not embeds:
-		await ctx.respond("No jobs found")
-	else:
-		for embed in embeds:
-			await ctx.respond(embed=embed)
-		await ctx.delete()
 
 
 @bot.slash_command(name="chegg", description="Convert's chegg link to unblocked content.", guild_ids=guild_ids)
