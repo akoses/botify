@@ -392,8 +392,8 @@ async def trivia(ctx):
 	Hello **{ctx.interaction.user.name}**, welcome to the trivia game! \nYou will answer one question and if your answer is correct, you will be awarded between **1000** and **100,000** coins.\nYou will have **10** seconds to answer the question.\nPress the start button in order to begin!
 	"""
 	triviaView = TriviaView()  
-	triviaView.message = await ctx.interaction.response.send_message(trivia_message, ephemeral=True, view=triviaView)
-	triviaView.ctx = ctx
+	await ctx.interaction.response.send_message(trivia_message, ephemeral=True, view=triviaView)
+	
 	
 @bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet")
 async def quizlet_search(ctx,
