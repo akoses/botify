@@ -1,12 +1,20 @@
 from bs4 import BeautifulSoup
 import discord
 import aiohttp
+from pyppeteer import launch
 import sys
 sys.path.append('..')
 from utils import fetch
 import asyncio
 async def find_jobs(job_title: str):
-	
+	browser = await launch(options={'args': ['--no-sandbox']})
+	page = await browser.newPage()
+	await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
+	url = 'https://www.linkedin.com/jobs/search/?keywords='+job_title+ '&location=Canada'
+	await page.goto(url, {'waitUntil': 'networkidle2'})
+	page_source = await page.content()
+	soup = BeautifulSoup(page_source, 'html.parser')
+	print(soup)
 	async with aiohttp.ClientSession() as session:
 		params = {
 			'keywords': job_title,
@@ -33,7 +41,7 @@ async def find_jobs(job_title: str):
 				embed.add_field(name="Company", value=company.text, inline=False)
 				embed.add_field(name="Location", value=location.text, inline=False)
 				embeds.append(embed)
-		print(embeds)
+		
 		return embeds[:5]
 
 if  __name__ == '__main__':

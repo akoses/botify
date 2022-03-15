@@ -158,7 +158,7 @@ async def check_jobs():
 				for channel in channels:
 					if channel:
 						channel = bot.get_channel(int(channel))
-						embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0xffffff)
+						embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ffff)
 						embed.add_field(name="Organization", value=job.get('organization'), inline=False)
 						embed.add_field(name="Location", value=job.get('location'), inline=False)
 						embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
@@ -430,7 +430,7 @@ async def indeed(ctx,
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
-	await ctx.delete()
+		await ctx.delete()
 
 @bot.slash_command(name="linkedin", description="Search for a job on LinkedIn", guild_ids=[939394818428243999])
 async def linkedin(ctx,
@@ -442,7 +442,7 @@ async def linkedin(ctx,
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
-	await ctx.delete()
+		await ctx.delete()
 
 @bot.slash_command(name="chegg", description="Convert's chegg link to unblocked content.", guild_ids=[939394818428243999])
 @permissions.has_any_role(*role_or_higher("Professor"))
@@ -463,7 +463,7 @@ async def books(ctx,
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
-	await ctx.delete()
+		await ctx.delete()
 
 ##################################
 #College Commands 
