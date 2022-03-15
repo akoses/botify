@@ -301,6 +301,8 @@ async def rank(ctx):
 	rank = await get_user_rank(ctx.interaction.user.id)
 	total_xp, level = await get_xp_levels(ctx.interaction.user.id)
 	curr_xp = curr_xp_for_level(total_xp, level)
+	if curr_xp < 0:
+		curr_xp = 0
 	next_xp = get_xp(level + 1)
 	avatar_url = ''
 	if not ctx.interaction.user.avatar:
