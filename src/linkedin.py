@@ -1,5 +1,9 @@
+import discord
 from discord.commands import Option, permissions
-from utils import *
+from discord.ext import commands
+intents = discord.Intents().all()
+bot = commands.Bot(intents=intents)
+
 import jobsearch.linkedin as lkn
 import os
 from dotenv import load_dotenv
@@ -16,6 +20,7 @@ async def on_ready():
 @bot.slash_command(name="linkedin", description="Search for a job on LinkedIn")
 async def linkedin(ctx,
 	title: Option(str, "Enter the job title")):
+	print(f'{ctx.author.name} has searched for {title}')
 	await ctx.defer()
 	embeds = await lkn.find_jobs(title)
 	if not embeds:

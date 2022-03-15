@@ -14,7 +14,7 @@ async def find_jobs(job_title: str):
 	await page.goto(url, {'waitUntil': 'networkidle2'})
 	page_source = await page.content()
 	soup = BeautifulSoup(page_source, 'html.parser')
-	print(soup)
+	
 	async with aiohttp.ClientSession() as session:
 		params = {
 			'keywords': job_title,
