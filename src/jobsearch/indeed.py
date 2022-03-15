@@ -29,4 +29,4 @@ async def find_jobs(job_title: str):
 				embed.add_field(name="Company", value=company.text, inline=False)
 				embed.add_field(name="Location", value=location.text, inline=False)
 				embeds.append(embed)
-		return embeds[:5]
+		return embeds[:8]
