@@ -423,7 +423,7 @@ async def assign_xp_to_user(ctx,
 
 
 @bot.slash_command(name="chegg", description="Convert's chegg link to unblocked content.", guild_ids=guild_ids)
-@permissions.has_any_role(*role_or_higher("Professor"))
+@permissions.has_any_role(*role_or_higher("Graduate"))
 async def chegg(ctx,
 	link: Option(str, "Enter the chegg link")):
 	await ctx.defer()
