@@ -112,7 +112,10 @@ IGNORE_ROLES = {
 'Admin',
 'carl-bot',
 'muted',
-'MEE6'
+'MEE6',
+"Chegg",
+"Job Searcher",
+"DISBOARD.org",
 }
 
 

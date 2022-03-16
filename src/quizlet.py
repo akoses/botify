@@ -20,6 +20,7 @@ async def find_content(question:str):
 	url = base_url+'?'+ query
 	await page.goto(url, {'waitUntil': 'networkidle2'})
 	page_source = await page.content()
+	print(page_source)
 	soup = BeautifulSoup(page_source, 'html.parser')
 	contents = soup.find_all('div', {'class':'SearchResultsPage-result'})
 	embeds = []
