@@ -390,11 +390,14 @@ async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 @bot.slash_command(name="salary-search", description="Search for a salary based on a job title.", guild_ids=guild_ids)
 async def salary_searcher(ctx,
 	job_title: Option(str, "Enter the job title you are looking for.")):
+	await ctx.defer()	
 	embed = await salary_search(job_title)
 	if embed:
 		await ctx.respond(embed=embed)
+		await ctx.delete()
 	else:
 		await ctx.respond("No results found.")
+	
 
 @bot.slash_command(name="trivia", description="Play a trivia game to win coins! You can only play once per day.",guild_ids=guild_ids)
 async def trivia(ctx):
