@@ -242,7 +242,7 @@ async def on_interaction(interaction):
 					job_name = await redisClient.hget("type-"+component_id, "NAME")
 					previous_application = await get_previous_application(interaction.user.id, int(component_id))
 					try:
-						await interaction.defer(ephemeral=True)
+						await interaction.response.defer(ephemeral=True)
 					except Exception as e:
 						print(e)
 					if previous_application:
@@ -252,7 +252,7 @@ async def on_interaction(interaction):
 					await assign_xp(bot, "APPLY", interaction.user.id)
 					await interaction.user.send(content="You have successfully applied to {}!".format(job_name.decode("utf-8")))
 					try:
-						await interaction.defer(ephemeral=True)
+						await interaction.response.defer(ephemeral=True)
 					except Exception as e:
 						print(e)
 @bot.event
