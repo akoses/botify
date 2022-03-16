@@ -259,7 +259,8 @@ async def on_interaction(interaction):
 					except Exception as e:
 						print(e)
 					
-		elif components and len(components[0].children):
+		elif components and len(components[0].children) == 1:
+			button = components[0].children[0]
 			component_name = button.custom_id
 			try:
 				entry_count = await get_entries(interaction.user.id)
