@@ -241,7 +241,7 @@ async def on_interaction(interaction):
 						return
 					await apply_to_job(interaction.user.id, int(component_id))
 					await assign_xp(bot, "APPLY", interaction.user.id)
-					await interaction.user.send(content="You have successfully applied to {}!".format(job_name))
+					await interaction.user.send(content="You have successfully applied to {}!".format(job_name.decode("utf-8")))
 
 @bot.event
 async def on_invite_delete(invite):
