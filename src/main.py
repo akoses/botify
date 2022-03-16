@@ -276,7 +276,7 @@ async def on_interaction(interaction):
 					await giveaway_entry(interaction.user, component_name, 1)
 					await interaction.user.send(content=f"You have now entered {component_name}! You now have {entry_count - 1} entries remaining.")
 					await set_entries(interaction.user.id, entry_count - 1)
-			
+				await interaction.response.send_message(content="You're doing great!", ephemeral=True)
 			except Exception as e:
 				print(e)
 
