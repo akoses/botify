@@ -33,7 +33,7 @@ from roles.roles import IGNORE_ROLES, ROLE_TO_SALARY, role_or_higher
 from scheduler import *
 import quizlet
 import chegg as chg
-
+from salary_search import salary_search
 index_to_num = {
 	1: "one",
 	2: "two",
@@ -387,7 +387,14 @@ async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 	await assign_xp(bot, "ATTEND_EVENT", ctx.interaction.user.id)
 	await ctx.respond(content="You have successfully signed up to be notified of {}!".format(event_name))
 
-
+@bot.slash_command(name="salary-search", description="Search for a job by salary", guild_ids=guild_ids)
+async def salary_searcher(ctx,
+	job_title: Option(str, "Enter the job title you are looking for.")):
+	embed = await salary_search(job_title)
+	if embed:
+		await ctx.respond(embed=embed)
+	else:
+		await ctx.respond("No results found.")
 
 @bot.slash_command(name="trivia", description="Play a trivia game to win coins! You can only play once per day.",guild_ids=guild_ids)
 async def trivia(ctx):
