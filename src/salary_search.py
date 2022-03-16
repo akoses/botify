@@ -28,7 +28,7 @@ async def salary_search(job_title):
 			description=salary_info.text,
 			color=0xA020F0
 			)
-			embed.add_field(name="Salary", value=f"{salary.text} / Annual", inline=False)
+			embed.add_field(name="Salary", value=f"{salary.text.strip()} / Annual", inline=False)
 			for region in regions:
 				embed.add_field(name=region.text, value=f"{region_salary[regions.index(region)].text}", inline=False)
 
