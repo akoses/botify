@@ -8,7 +8,6 @@ import books.libgen as libgen
 import Rankcard
 from io import BytesIO
 
-
 from db import (
 	get_user_balance, 
 	get_user_rank, 
@@ -46,7 +45,6 @@ index_to_num = {
 	9: "nine",
 	10:"ten",
 }
-
 
 
 index_to_unicode = {
@@ -221,11 +219,12 @@ async def on_interaction(interaction):
 		await bot.process_application_commands(interaction)
 	if interaction.message:
 		components = interaction.message.components
+		 
 		if components and len(components[0].children) == 2:
 			button = components[0].children[1]
 			component_id = button.custom_id			
 			interaction_type = await redisClient.hget("type-"+component_id, "TYPE")
-			print(component_id, interaction_type)
+			
 			if interaction_type:
 				interaction_type = interaction_type.decode("utf-8") 
 				if interaction_type == "EVENT":
@@ -259,6 +258,25 @@ async def on_interaction(interaction):
 						await interaction.response.send_message(content="You're doing great!", ephemeral=True)
 					except Exception as e:
 						print(e)
+					
+		elif components and len(components[0].children):
+			component_name = button.custom_id
+			try:
+				entry_count = await get_entries(interaction.user.id)
+				_, curr_level = await get_xp_levels(interaction.user.id)
+				giveaway_obj = await redisClient.get(component_name)
+				if giveaway_obj:
+					giveaway_obj = json.loads(giveaway_obj)
+					if giveaway_obj['required_level'] > curr_level:
+						await interaction.response.send_message(content=f"You do not meet the required level to enter this giveaway.")
+						return
+					await giveaway_entry(interaction.user, component_name, 1)
+					await interaction.response.send_message(content=f"You now have {entry_count - 1} entries remaining.")
+					await set_entries(interaction.user.id, entry_count - 1)
+			
+			except Exception as e:
+				print(e)
+
 @bot.event
 async def on_invite_delete(invite):
 	"""
@@ -390,7 +408,6 @@ async def applications(ctx):
 
 @bot.slash_command(name="attend-event" ,description="Attend an event given an event id. You will be given a reminder for the event to start.",guild_ids=guild_ids)
 async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
-	
 	event_name = await get_event_name(event_id)
 	previous_event = await redisClient.sismember(str(event_id), str(ctx.interaction.user.id))
 	if previous_event:

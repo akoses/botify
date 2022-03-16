@@ -9,6 +9,7 @@ from apscheduler.jobstores.redis import RedisJobStore
 
 from utils import *
 from db import get_event
+from views import GiveawayButton
 
 jobstores = {
 	'default': RedisJobStore(),
@@ -29,8 +30,10 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description, level):
 	giveaway.add_field(name="Prize  :money_with_wings: ", value=f"{prize}", inline=False)
 	giveaway.add_field(name="Winners :trophy:", value=f"{winners} ", inline=False)
 	giveaway.add_field(name="Draw Date :hourglass:", value=f"{giveaway_time.strftime('%B %d, %Y %I:%M %p')} ",inline=False)
-	giveaway.set_footer(text=f"Use the /giveaway enter {name} command to enter the giveaway.")
 	
+	view = discord.ui.View()
+	view.add_item(GiveawayButton(name))
+
 	giveaway_obj = {
 		'name': name,
 		'prize': prize,
@@ -40,11 +43,11 @@ async def create_giveaway(ctx, name, prize, winners, gtime, description, level):
 		'required_level': level,
 		'entries':[]
 	}
-
 	
+
 	await redisClient.set(name, json.dumps(giveaway_obj, default=str))
 	await redisClient.sadd('giveaways', name)
-	await bot.get_channel(GIVEAWAY_CHANNEL).send(embed=giveaway)
+	await bot.get_channel(939423795763105825).send(embed=giveaway, view=view)
 	
 	scheduler.add_job(end_giveaway, 'date', run_date=giveaway_time, timezone=timezone('Canada/Mountain'), args=[name])
 

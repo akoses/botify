@@ -26,8 +26,7 @@ class EventButton(discord.ui.Button):
 		)
 		self.id = event_id
 		self.name = event_name
-	
-		
+			
 class JobButton(discord.ui.Button):
 	def __init__(self, job_id, job_name):
 		super().__init__(
@@ -37,6 +36,18 @@ class JobButton(discord.ui.Button):
 		)
 		self.id = job_id
 		self.name = job_name
+
+
+class GiveawayButton(discord.ui.Button):
+	def __init__(self, giveaway_name):
+		super().__init__(
+			label="Enter Giveaway",
+			style=discord.enums.ButtonStyle.primary,
+			custom_id=giveaway_name,
+		)
+		self.name = giveaway_name
+
+	
 
 
 class CollegeRequestView(discord.ui.View):
