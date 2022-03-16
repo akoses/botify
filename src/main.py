@@ -139,6 +139,8 @@ async def check_events():
 						embed.add_field(name="Date", value=event.get('date'), inline=False)
 						embed.set_footer(text="Event ID: %s" % event.get('id'))
 						link =  event.get('link')
+						event_type = {"TYPE":"EVENT", "NAME": event.get('name')}
+						await redisClient.hmset("type-"+ event.get('id'), event_type)
 						view = LinkView(link, "Event Link")
 						view.add_item(EventButton(event.get('id'), event.get('name')))
 						await channel.send(embed=embed, view=view)
@@ -163,6 +165,8 @@ async def check_jobs():
 						embed.set_footer(text="JOB ID: %s" % job.get('id'))
 						link =  job.get('applyurl')
 						view = LinkView(link, "Apply URL")
+						job_type = {"TYPE":"JOB","NAME": job.get('name')}
+						await redisClient.hmset("type-"+ job.get('id'), job_type)
 						view.add_item(JobButton(job.get('id'), job.get('name')))
 						await channel.send(embed=embed, view=view)
 					
@@ -208,7 +212,7 @@ async def on_invite_create(invite):
 
 @bot.event
 async def on_interaction(interaction):
-	print(interaction)
+	
 	if str(interaction.type) == "InteractionType.application_command":
 		await bot.process_application_commands(interaction)
 	if interaction.message:
@@ -217,10 +221,8 @@ async def on_interaction(interaction):
 
 			await interaction.response.defer()
 			button = components[0].children[1]
-
 			component_id = button.custom_id
-			if await redisClient.sismember('interaction-ids', str(interaction.id)):
-				return
+			
 			interaction_type = await redisClient.hget("type-"+component_id, "TYPE")
 			if interaction_type:
 				interaction_type = interaction_type.decode("utf-8") 

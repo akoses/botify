@@ -27,19 +27,6 @@ class EventButton(discord.ui.Button):
 		self.id = event_id
 		self.name = event_name
 	
-	async def callback(self, interaction):
-		if await redisClient.sismember('interaction-ids', str(interaction.id)):
-			return
-		await redisClient.sadd('interaction-ids', str(interaction.id))
-		if await redisClient.sismember(str(self.id), interaction.user.id):
-			await interaction.user.send("You have already registered for this event.")
-			return
-		await redisClient.sadd(str(self.id), interaction.user.id)
-		event_type = {"TYPE":"EVENT", "NAME": self.name}
-		await redisClient.hmset("type-"+ str(self.id), event_type)
-		await assign_xp(bot, "ATTEND_EVENT", interaction.user.id)
-	
-		await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(self.name))
 		
 class JobButton(discord.ui.Button):
 	def __init__(self, job_id, job_name):
@@ -50,20 +37,6 @@ class JobButton(discord.ui.Button):
 		)
 		self.id = job_id
 		self.name = job_name
-	async def callback(self, interaction):
-		if await redisClient.sismember('interaction-ids', str(interaction.id)):
-			return
-		await redisClient.sadd('interaction-ids', str(interaction.id))
-		previous_application = await get_previous_application(interaction.user.id, self.id)
-		
-		if previous_application:
-			await interaction.user.send("You have already applied to {}.".format(self.name))
-			return
-		await assign_xp(bot, "APPLY", interaction.user.id)
-		await apply_to_job(interaction.user.id, self.id)
-		job_type = {"TYPE":"JOB","NAME": self.name}
-		await redisClient.hmset("type-"+ str(self.id), job_type)
-		await interaction.user.send(content=f"You have successfully tracked the role {self.name}! You can check your other applications using the `/applications` command.")
 
 
 class CollegeRequestView(discord.ui.View):
