@@ -29,5 +29,7 @@ async def on_ready():
 	
 	print(f'{client.user.name} has connected to Discord!')
 	members = client.guilds[0].members
-	await give_roles(list(map(lambda x: x.id, members)))
+	await give_roles(members)
 	await client.close()
+
+client.run(TOKEN)
