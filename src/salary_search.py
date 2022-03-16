@@ -18,7 +18,7 @@ async def salary_search(job_title):
 		salary_info = soup.find('div', {'class': 'c-card__stats-info'})
 		region_salaries = soup.find('div', {'id': 'salariesRegions'})
 		region_salary = []
-		region = []
+		regions = []
 		if region_salaries:
 			region_salary = region_salaries.find_all('div', {'class': 'c-card--progressBar--number'})
 			regions = region_salaries.find_all('div', {'class': 'c-card--progressBar--text'})
