@@ -354,7 +354,7 @@ async def apply(ctx,
 	await apply_to_job(ctx.interaction.user.id, job_id)
 	await assign_xp(bot, "APPLY", ctx.interaction.user.id)	
 
-@bot.slash_command(name="salary", description="Shows a user's current salary.", guild_ids=guild_ids)
+
 async def salary(ctx):
 	role = await get_role(ctx.interaction.user.id)
 	embed = discord.Embed(
