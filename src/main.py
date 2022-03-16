@@ -271,6 +271,8 @@ async def on_interaction(interaction):
 					if giveaway_obj['required_level'] > curr_level:
 						await interaction.response.send_message(content=f"You do not meet the required level to enter this giveaway.")
 						return
+					if entry_count < 1:
+						await interaction.response.send_message(f"Sorry, you do not have enough giveaway entries. You have {entry_count} entries.")
 					await giveaway_entry(interaction.user, component_name, 1)
 					await interaction.response.send_message(content=f"You now have {entry_count - 1} entries remaining.")
 					await set_entries(interaction.user.id, entry_count - 1)
