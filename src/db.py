@@ -245,7 +245,7 @@ async def get_applications(user_id):
 	
 	conn = await connect()
 
-	applications = await conn.fetch("""SELECT j.name AS name, j.organization AS organization, j.applyURL AS applyURL, j.location AS location, a.date AS date FROM jobs j INNER JOIN apply a ON j.id = (SELECT jobs_id FROM apply WHERE discord_id = $1)""", user_id)
+	applications = await conn.fetch("""SELECT j.name AS name, j.organization AS organization, j.applyURL AS applyURL, j.location AS location, a.date AS date FROM jobs j INNER JOIN apply a ON j.id = (SELECT jobs_id FROM apply WHERE discord_id = $1 LIMIT 1)""", user_id)
 
 	return applications
 
