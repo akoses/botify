@@ -387,7 +387,7 @@ async def attendevent(ctx, event_id: Option(int, "Enter the event id")):
 	await assign_xp(bot, "ATTEND_EVENT", ctx.interaction.user.id)
 	await ctx.respond(content="You have successfully signed up to be notified of {}!".format(event_name))
 
-@bot.slash_command(name="salary-search", description="Search for a job by salary", guild_ids=guild_ids)
+@bot.slash_command(name="salary-search", description="Search for a salary based on a job title.", guild_ids=guild_ids)
 async def salary_searcher(ctx,
 	job_title: Option(str, "Enter the job title you are looking for.")):
 	embed = await salary_search(job_title)
