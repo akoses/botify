@@ -208,7 +208,7 @@ async def on_invite_create(invite):
 
 @bot.event
 async def on_interaction(interaction):
-
+	print(interaction)
 	if str(interaction.type) == "InteractionType.application_command":
 		await bot.process_application_commands(interaction)
 	if interaction.message:
