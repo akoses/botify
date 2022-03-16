@@ -224,6 +224,7 @@ async def on_interaction(interaction):
 			component_id = button.custom_id
 			
 			interaction_type = await redisClient.hget("type-"+component_id, "TYPE")
+			print(component_id, interaction_type)
 			if interaction_type:
 				interaction_type = interaction_type.decode("utf-8") 
 				if interaction_type == "EVENT":
