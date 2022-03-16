@@ -218,8 +218,6 @@ async def on_interaction(interaction):
 	if interaction.message:
 		components = interaction.message.components
 		if components and len(components[0].children) == 2:
-
-			await interaction.response.defer()
 			button = components[0].children[1]
 			component_id = button.custom_id			
 			interaction_type = await redisClient.hget("type-"+component_id, "TYPE")
