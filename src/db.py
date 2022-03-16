@@ -245,7 +245,10 @@ async def get_applications(user_id):
 	
 	conn = await connect()
 
-	applications = await conn.fetch("""SELECT * FROM jobs WHERE id IN (SELECT jobs_id FROM apply WHERE discord_id = $1)""", user_id)
+	applications = await conn.fetch("""SELECT j.*, a.*
+			FROM jobs j, apply a
+			WHERE j.id = a.jobs_id
+			AND a.discord_id = $1""", user_id)
 
 	return applications
 
