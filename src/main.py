@@ -276,8 +276,9 @@ async def on_member_join(member):
 				inviter = invite.inviter
 			
 				await assign_xp(bot, "REFERRAL", inviter.id)
-		role = discord.utils.get(member.guild.roles, name="Lower Year Student")
-		await member.add_roles(role)
+	
+	role = discord.utils.get(member.guild.roles, name="Lower Year Student")
+	await member.add_roles(role)
 
 @bot.slash_command(name="ping", description="Pong!", guild_ids=guild_ids)
 async def ping(ctx):
