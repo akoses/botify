@@ -233,6 +233,11 @@ async def on_interaction(interaction):
 					await redisClient.sadd(component_id, interaction.user.id)
 
 					await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(event_name.decode("utf-8")))
+					try:
+						if not interaction.is_done():
+							await interaction.response.send_message(delete_after=0)
+					except Exception as e:
+						print(e)
 				elif interaction_type == "JOB":
 					job_name = await redisClient.hget("type-"+component_id, "NAME")
 					previous_application = await get_previous_application(interaction.user.id, int(component_id))
@@ -242,7 +247,11 @@ async def on_interaction(interaction):
 					await apply_to_job(interaction.user.id, int(component_id))
 					await assign_xp(bot, "APPLY", interaction.user.id)
 					await interaction.user.send(content="You have successfully applied to {}!".format(job_name.decode("utf-8")))
-
+					try:
+						if not interaction.is_done():
+							await interaction.response.send_message(delete_after=0)
+					except Exception as e:
+						print(e)
 @bot.event
 async def on_invite_delete(invite):
 	"""
