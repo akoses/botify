@@ -96,9 +96,9 @@ async def end_giveaway(gid):
 		embeds.append(embed)
 
 	if len(embeds) > 0:	
-		await bot.get_channel(GIVEAWAY_CHANNEL).send(content=f"**Winner of {giveaway['name']}**", embed=embeds[0])
+		await bot.get_channel(939423795763105825).send(content=f"**Winner of {giveaway['name']}**", embed=embeds[0])
 	else:
-		await bot.get_channel(GIVEAWAY_CHANNEL).send(content=f"Winners of {giveaway['name']}", embeds=embeds)
+		await bot.get_channel(939423795763105825).send(content=f"Winners of {giveaway['name']}", embeds=embeds)
 	
 		
 async def notify_event(event_id):
