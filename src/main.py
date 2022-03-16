@@ -225,6 +225,10 @@ async def on_interaction(interaction):
 			if interaction_type:
 				interaction_type = interaction_type.decode("utf-8") 
 				if interaction_type == "EVENT":
+					try:
+						await interaction.defer(ephemeral=True)
+					except Exception as e:
+						print(e)
 					event_name = await redisClient.hget("type-"+component_id, "NAME")
 					if await redisClient.sismember(component_id, interaction.user.id):
 						await interaction.user.send("You have already registered for this event.")
@@ -233,14 +237,14 @@ async def on_interaction(interaction):
 					await redisClient.sadd(component_id, interaction.user.id)
 
 					await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(event_name.decode("utf-8")))
-					try:
-						await interaction.defer(ephemeral=True)
-							
-					except Exception as e:
-						print(e)
+					
 				elif interaction_type == "JOB":
 					job_name = await redisClient.hget("type-"+component_id, "NAME")
 					previous_application = await get_previous_application(interaction.user.id, int(component_id))
+					try:
+						await interaction.defer(ephemeral=True)
+					except Exception as e:
+						print(e)
 					if previous_application:
 						await interaction.user.send("You have already applied to this job.")
 						return

@@ -29,7 +29,7 @@ async def linkedin(ctx,
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
-		await ctx.delete()
+		
 
 @bot.slash_command(name="indeed", description="Search for a job on Indeed")
 async def indeed(ctx,
@@ -41,7 +41,7 @@ async def indeed(ctx,
 	else:
 		for embed in embeds:
 			await ctx.respond(embed=embed)
-		await ctx.delete()
+		
 
 
 bot.run(TOKEN)
