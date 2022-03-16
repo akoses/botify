@@ -234,8 +234,8 @@ async def on_interaction(interaction):
 
 					await interaction.user.send(content="You have successfully signed up to be notified of {}!".format(event_name.decode("utf-8")))
 					try:
-						if not interaction.is_done():
-							await interaction.response.send_message(delete_after=0)
+						await interaction.defer(ephemeral=True)
+							
 					except Exception as e:
 						print(e)
 				elif interaction_type == "JOB":
@@ -248,8 +248,7 @@ async def on_interaction(interaction):
 					await assign_xp(bot, "APPLY", interaction.user.id)
 					await interaction.user.send(content="You have successfully applied to {}!".format(job_name.decode("utf-8")))
 					try:
-						if not interaction.is_done():
-							await interaction.response.send_message(delete_after=0)
+						await interaction.defer(ephemeral=True)
 					except Exception as e:
 						print(e)
 @bot.event
