@@ -394,7 +394,6 @@ async def salary_searcher(ctx,
 	embed = await salary_search(job_title)
 	if embed:
 		await ctx.respond(embed=embed)
-		await ctx.delete()
 	else:
 		await ctx.respond("No results found.")
 	
