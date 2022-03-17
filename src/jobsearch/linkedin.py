@@ -6,19 +6,14 @@ import sys
 sys.path.append('..')
 from utils import fetch
 import asyncio
-async def find_jobs(job_title: str):
-	browser = await launch(options={'args': ['--no-sandbox']})
-	page = await browser.newPage()
-	await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
-	url = 'https://www.linkedin.com/jobs/search/?keywords='+job_title+ '&location=Canada'
-	await page.goto(url, {'waitUntil': 'networkidle2'})
-	page_source = await page.content()
-	soup = BeautifulSoup(page_source, 'html.parser')
-	
+async def find_jobs(job_title: str, location="Canada"):
+
 	async with aiohttp.ClientSession() as session:
+		if "Canada" not in location:
+			location = f"{location}, Canada"
 		params = {
 			'keywords': job_title,
-			'location': 'Canada',
+			'location': location,
 		}
 		res = await fetch(session, 'https://www.linkedin.com/jobs/search/', params)
 		soup = BeautifulSoup(res, 'html.parser')
@@ -33,6 +28,7 @@ async def find_jobs(job_title: str):
 			link = job.find('a', {'class': 'base-card__full-link'})
 
 			if title and company and location:
+				print(title.text, company.text, location.text)
 				embed = discord.Embed(
 					title=title.text,
 					url=link.get("href"),
@@ -42,8 +38,8 @@ async def find_jobs(job_title: str):
 				embed.add_field(name="Location", value=location.text, inline=False)
 				embeds.append(embed)
 		
-		return embeds[:5]
+		return embeds[:8]
 
 if  __name__ == '__main__':
 	loop = asyncio.get_event_loop()
-	loop.run_until_complete(find_jobs('Software Engineer'))
+	loop.run_until_complete(find_jobs('Software Engineer Intern', 'Montreal'))

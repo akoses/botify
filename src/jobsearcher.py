@@ -20,10 +20,11 @@ async def on_ready():
 
 @bot.slash_command(name="linkedin", description="Search for a job on LinkedIn")
 async def linkedin(ctx,
-	title: Option(str, "Enter the job title")):
+	title: Option(str, "Enter the job title"), 
+	location: Option(str, "Enter the location. Defaults to Canada") = "Canada"):
 	print(f'{ctx.author.name} has searched for {title}')
 	await ctx.defer()
-	embeds = await lkn.find_jobs(title)
+	embeds = await lkn.find_jobs(title, location)
 	if not embeds:
 		await ctx.respond("No jobs found")
 	else:
@@ -33,9 +34,10 @@ async def linkedin(ctx,
 
 @bot.slash_command(name="indeed", description="Search for a job on Indeed")
 async def indeed(ctx,
-	title: Option(str, "Enter the job title")):
+	title: Option(str, "Enter the job title"), 
+	location: Option(str, "Enter the location. Defaults to Canada") = "Canada"):
 	await ctx.defer()
-	embeds = await ind.find_jobs(title)
+	embeds = await ind.find_jobs(title, location)
 	if not embeds:
 		await ctx.respond("No jobs found")
 	else:
