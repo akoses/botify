@@ -446,7 +446,7 @@ async def trivia(ctx):
 	await ctx.interaction.response.send_message(trivia_message, ephemeral=True, view=triviaView)
 	
 	
-#@bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet", guild_ids=guild_ids)
+@bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet", guild_ids=guild_ids)
 async def quizlet_search(ctx,
 	query: Option(str, "What are you looking for?")
 ):

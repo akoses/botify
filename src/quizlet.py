@@ -1,4 +1,3 @@
-
 from bs4 import BeautifulSoup
 import urllib
 import asyncio
@@ -19,30 +18,33 @@ async def find_content(question:str):
 	await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
 	url = base_url+'?'+ query
 	await page.goto(url, {'waitUntil': 'networkidle2'})
-	page_source = await page.content()
-	with open('test.html', 'w') as f:
-		f.write(page_source)
-	soup = BeautifulSoup(page_source, 'html.parser')
-	contents = soup.find_all('div', {'class':'SetPreviewCard'})
+	card_container = await page.querySelector('.SetsView-resultList')
+	cards = await card_container.querySelectorAll('.SetPreviewCard-metadata')
 	embeds = []
-	for content in contents:
-		title = content.find('h5', {'class':'SetPreviewCard-title'})
-		terms = content.find('span', {'class':'AssemblyPillText'})
-		url = content.find('a', {'class':['AssemblyLink']})
-		print(url)
-		if title and terms and url:
-			embed = discord.Embed(
-				title=title.text,
-				url=url.get("href"),
+	for i in range(len(cards)):	
+		await page.waitForSelector('.SetPreviewCard-metadata')
+		
+		cards = await page.querySelectorAll('.SetPreviewCard-metadata')
+		title = await cards[i].querySelector('.SetPreviewCard-title')
+		terms = await cards[i].querySelector('.AssemblyPillText')
+		title = await page.evaluate('el => el.textContent', title)
+		terms = await page.evaluate('el => el.textContent', terms)
+		await page.evaluate('card => card.click()', cards[i])
+		await page.waitFor(800)
+		
+		embed = discord.Embed(
+				title=title,
+				url=page.url,
 			)
-			embed.add_field(name="Terms", value=terms.text, inline=False)
-			
-			embeds.append(embed)
+		embed.add_field(name="Terms", value=terms, inline=False)
+		embeds.append(embed)
+		await page.waitFor(800)
+		await page.goBack()
+		
 	
-	await browser.close()
-	print(len(embeds))
+	return embeds
 
 
 if __name__ == '__main__':
 	loop = asyncio.get_event_loop()
-	loop.run_until_complete(find_content('Ualberta BIOL 108'))
+	loop.run_until_complete(find_content('Chem 101'))
