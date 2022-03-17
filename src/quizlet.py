@@ -20,14 +20,16 @@ async def find_content(question:str):
 	url = base_url+'?'+ query
 	await page.goto(url, {'waitUntil': 'networkidle2'})
 	page_source = await page.content()
-	print(page_source)
+	with open('test.html', 'w') as f:
+		f.write(page_source)
 	soup = BeautifulSoup(page_source, 'html.parser')
-	contents = soup.find_all('div', {'class':'SearchResultsPage-result'})
+	contents = soup.find_all('div', {'class':'SetPreviewCard'})
 	embeds = []
 	for content in contents:
 		title = content.find('h5', {'class':'SetPreviewCard-title'})
 		terms = content.find('span', {'class':'AssemblyPillText'})
 		url = content.find('a', {'class':['AssemblyLink']})
+		print(url)
 		if title and terms and url:
 			embed = discord.Embed(
 				title=title.text,
@@ -38,7 +40,7 @@ async def find_content(question:str):
 			embeds.append(embed)
 	
 	await browser.close()
-	return embeds
+	print(len(embeds))
 
 
 if __name__ == '__main__':
