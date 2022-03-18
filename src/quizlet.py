@@ -18,28 +18,27 @@ async def find_content(question:str):
 	await page.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36");
 	url = base_url+'?'+ query
 	await page.goto(url, {'waitUntil': 'networkidle2'})
-	card_container = await page.querySelector('.SetsView-resultList')
-	cards = await card_container.querySelectorAll('.SetPreviewCard-metadata')
+	content = await page.content()
+	soup = BeautifulSoup(content, 'html.parser')
+	card_container = soup.find('div', {'class': 'SetsView-resultList'})
+	cards = card_container.findAll('div', {'class': 'SearchResultsPage-result'})
 	embeds = []
 	for i in range(len(cards)):	
-		await page.waitForSelector('.SetPreviewCard-metadata')
+		data_item_id = cards[i].get('data-item-id')
+		title = cards[i].find('h5', {'class':'SetPreviewCard-title'})
+		terms = cards[i].find('span', {'class':'AssemblyPillText'})
 		
-		cards = await page.querySelectorAll('.SetPreviewCard-metadata')
-		title = await cards[i].querySelector('.SetPreviewCard-title')
-		terms = await cards[i].querySelector('.AssemblyPillText')
-		title = await page.evaluate('el => el.textContent', title)
-		terms = await page.evaluate('el => el.textContent', terms)
-		await page.evaluate('card => card.click()', cards[i])
-		await page.waitFor(800)
-		
-		embed = discord.Embed(
+		if title and terms and data_item_id:
+			title = title.text
+			terms = terms.text
+			card_url = 'https://quizlet.com/'+data_item_id
+			embed = discord.Embed(
 				title=title,
-				url=page.url,
+				url=card_url,
 			)
-		embed.add_field(name="Terms", value=terms, inline=False)
-		embeds.append(embed)
-		await page.waitFor(800)
-		await page.goBack()
+			embed.add_field(name="Terms", value=terms, inline=False)
+			embeds.append(embed)
+		
 		
 	
 	return embeds
