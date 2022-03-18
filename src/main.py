@@ -448,7 +448,7 @@ async def trivia(ctx):
 	
 @bot.slash_command(name="quizlet", description="Searches for quiz sets on Quizlet", guild_ids=guild_ids)
 async def quizlet_search(ctx,
-	query: Option(str, "What are you looking for?")
+	query: Option(str, "What is the name of the flashcard sets you are looking for?")
 ):
 	await ctx.defer()
 	embeds = await quizlet.find_content(query)
