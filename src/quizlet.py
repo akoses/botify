@@ -21,13 +21,14 @@ async def find_content(question:str):
 	content = await page.content()
 	soup = BeautifulSoup(content, 'html.parser')
 	card_container = soup.find('div', {'class': 'SetsView-resultList'})
+	if not card_container:
+		return []
 	cards = card_container.findAll('div', {'class': 'SearchResultsPage-result'})
 	embeds = []
 	for i in range(len(cards)):	
 		data_item_id = cards[i].get('data-item-id')
 		title = cards[i].find('h5', {'class':'SetPreviewCard-title'})
 		terms = cards[i].find('span', {'class':'AssemblyPillText'})
-		
 		if title and terms and data_item_id:
 			title = title.text
 			terms = terms.text
