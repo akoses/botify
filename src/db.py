@@ -7,7 +7,7 @@ import os
 import datetime
 load_dotenv()
 
-INSERT_USERS = """INSERT INTO users (discord_id, balance, giveaway_entries, role_name, total_xp, level) VALUES ($1, $2, $3, $4, $5, $6)"""
+INSERT_USERS = """INSERT INTO users (discord_id, balance, giveaway_entries, role_name, total_xp, level) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (discord_id) DO NOTHING"""
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 intents = discord.Intents.all()
