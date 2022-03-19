@@ -229,7 +229,7 @@ async def on_interaction(interaction):
 				interaction_type = interaction_type.decode("utf-8") 
 				if interaction_type == "EVENT":
 					try:
-						await interaction.defer(ephemeral=True)
+						await interaction.response.defer(ephemeral=True)
 					except Exception as e:
 						print(e)
 					event_name = await redisClient.hget("type-"+component_id, "NAME")
