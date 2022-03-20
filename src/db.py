@@ -328,6 +328,9 @@ async def set_role(discord_id, role):
 		discord_id (int): The discord id of the user.
 		role (str): The role of the user.
 	"""
+
+	if not role:
+		return
 	conn = await connect()
 
 	await conn.execute("UPDATE users SET role_name=$1 WHERE discord_id = $2", role.name, discord_id)
