@@ -20,7 +20,7 @@ async def give_roles(members):
 		except Exception as e:
 			pass
 		
-
+GUILD_ID = 939394818428243999
 @client.event
 async def on_ready():
 	"""
@@ -28,7 +28,7 @@ async def on_ready():
 	"""
 	
 	print(f'{client.user.name} has connected to Discord!')
-	members = client.guilds[0].members
+	members = client.fetch_guild(GUILD_ID).members
 	await give_roles(members)
 	await client.close()
 

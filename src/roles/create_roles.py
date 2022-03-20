@@ -8,7 +8,7 @@ import os
 import roles as r
 from dotenv import load_dotenv
 load_dotenv()
-
+GUILD_ID = 939394818428243999
 async def create_roles(client:discord.Client):
 	"""
 	Create all the roles needed to instantiate the application.
@@ -17,9 +17,9 @@ async def create_roles(client:discord.Client):
 
 	#pylint: disable=no-member
 	for role, c_values in r.ROLE_TO_COLOUR.items():
-		if role not in client.guilds[0].roles:
+		if role not in client.fetch_guild(GUILD_ID).roles:
 			colour = discord.Color.from_rgb(c_values[0], c_values[1], c_values[2])
-			await client.guilds[0].create_role(name=role, colour=colour, hoist=True)
+			await client.fetch_guild(GUILD_ID).create_role(name=role, colour=colour, hoist=True)
 			print(f"Created role {role}")
 
 

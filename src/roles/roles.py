@@ -14,7 +14,6 @@ ROLE_TO_LEVEL = {
 	"Graduate":20,
 	"Upper Year Student":10,
 	"Lower Year Student":1,
-	"Drop Out":0
 }
 
 ROLE_TO_ID = {
@@ -44,7 +43,6 @@ LEVEL_TO_ROLE = {
 	20: "Graduate",
 	10: "Upper Year Student",
 	1: "Lower Year Student",
-	0: "Drop Out"
 }
 
 ROLE_TO_COLOUR ={
@@ -130,7 +128,10 @@ def get_level_to_role(level:int):
 	"""
 	Get the role for a given level
 	"""
-	return LEVEL_TO_ROLE[(level // 10) * 10]
+	lev = level // 10
+	if lev == 0:
+		return "Lower Year Student"
+	return LEVEL_TO_ROLE[lev * 10]
 
 
 def get_role_to_salary(role:str):
