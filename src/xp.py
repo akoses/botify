@@ -21,7 +21,7 @@ ACTION_TO_XP = {
 	"REFERRAL": 1000,
 	"WIN_GAME": 10000
 }
-
+GUILD_ID = 939394818428243999
 MAX_XP = 18604330
 
 def xp_less_50(n:int):
@@ -137,16 +137,16 @@ async def assign_xp(bot, payload, discord_id:int, xp_amount = 0):
 		new = False
 		factor = level // 10
 		new_role = None
-		if new_level // 10 > factor:
+		if (new_level // 10) > factor:
 			entries = ROLE_TO_ENTRIES[get_level_to_role(new_level)]
 			new = True
-			old_role = discord.utils.get(bot.guilds[0].roles, name=get_level_to_role(level))
-			new_role = discord.utils.get(bot.guilds[0].roles, name=get_level_to_role(new_level))
+			old_role = discord.utils.get(bot.fetch_guild(GUILD_ID).roles, name=get_level_to_role(level))
+			new_role = discord.utils.get(bot.fetch_guild(GUILD_ID).roles, name=get_level_to_role(new_level))
 			if new_role:
-				await bot.guilds[0].get_member(discord_id).add_roles(new_role)
+				await bot.fetch_guild(GUILD_ID).get_member(discord_id).add_roles(new_role)
 				await set_role(discord_id, new_role)
 			if old_role:
-				await bot.guilds[0].get_member(discord_id).remove_roles(old_role)
+				await bot.fetch_guild(GUILD_ID).get_member(discord_id).remove_roles(old_role)
 			
 
 		
@@ -181,8 +181,6 @@ def curr_xp_for_level(xp:int, level:int) -> int:
 def test():
 	"""Test the xp generator"""
 	curr_xp = MAX_XP - 1000000
-	for i in range(1, 101):
-		print(i, get_xp(i), get_xp_total(i))
 
 
 if __name__ == "__main__":

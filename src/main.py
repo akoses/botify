@@ -81,7 +81,7 @@ POLLS_CHANNEL = int(os.getenv('POLLS_CHANNEL'))
 invite_map = dict()
 
 guild_ids = [939394818428243999]
-
+GUILD_ID = 939394818428243999 
 @tasks.loop(time=[datetime.time(hour=3, minute=0, second=0)], reconnect=True)
 async def get_would_you_rather():
 	question, answers = await get_poll()
@@ -99,7 +99,7 @@ async def get_would_you_rather():
 async def pay_salaries():
 	for role in ROLE_TO_SALARY:
 		salary = ROLE_TO_SALARY[role]
-		members = discord.utils.get(bot.guilds[0].roles, name=role).members
+		members = discord.utils.get(bot.fetch_guild(GUILD_ID).roles, name=role).members
 
 		members = map(lambda x: (salary, x.id), members)
 		await add_salaries(members)
@@ -179,7 +179,7 @@ async def on_ready():
 	This event is called when the bot is ready.
 	"""
 	print(f'{bot.user.name} has connected to Discord!')
-	invites = await bot.guilds[0].invites()
+	invites = await bot.fetch_guild(GUILD_ID).invites()
 	for invite in invites:
 		invite_map[invite.code] = invite
 	
@@ -187,6 +187,11 @@ async def on_ready():
 	global guild_ids
 	guild_ids = list(map(lambda x: x.id,bot.guilds))
 
+	for guild in bot.guilds:
+		if guild.id != GUILD_ID:
+			await guild.owner.send("Sorry, but this bot is for private use only. Please contact info@akose.ca to get access.")
+			await guild.leave()
+		
 	print(guild_ids)
 	if not get_would_you_rather.is_running():
 		get_would_you_rather.start()
@@ -211,6 +216,16 @@ async def on_invite_create(invite):
 	This event is called when a new invite is created.
 	"""
 	invite_map[invite.code] = invite
+
+
+@bot.event 
+async def on_guild_join(guild):
+	"""
+	This event is called when the bot joins a guild.
+	"""
+	if guild.id != GUILD_ID:
+		await guild.owner.send("Sorry, but this bot is for private use only. Please contact info@akose.ca to get access.")
+		await guild.leave()
 
 @bot.event
 async def on_interaction(interaction):

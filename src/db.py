@@ -12,7 +12,7 @@ INSERT_USERS = """INSERT INTO users (discord_id, balance, giveaway_entries, role
 TOKEN = os.getenv("DISCORD_TOKEN")
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
-
+GUILD_ID = 939394818428243999
 
 def config(filename='database.ini', section='postgresql'):
 	# create a parser
@@ -453,7 +453,7 @@ async def on_ready():
 	
 	print(f'{client.user.name} has connected to Discord!')
 	await create_tables()
-	members = client.guilds[0].members
+	members = client.fetch_guild(GUILD_ID).members
 	await insert_many_users(list(map(lambda x: x.id, members)))
 	await client.close()
 
