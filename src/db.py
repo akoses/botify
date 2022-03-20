@@ -453,7 +453,8 @@ async def on_ready():
 	
 	print(f'{client.user.name} has connected to Discord!')
 	await create_tables()
-	members = client.fetch_guild(GUILD_ID).members
+	members = await client.fetch_guild(GUILD_ID)
+	members = members.members
 	await insert_many_users(list(map(lambda x: x.id, members)))
 	await client.close()
 

@@ -99,7 +99,8 @@ async def get_would_you_rather():
 async def pay_salaries():
 	for role in ROLE_TO_SALARY:
 		salary = ROLE_TO_SALARY[role]
-		members = discord.utils.get(bot.fetch_guild(GUILD_ID).roles, name=role).members
+		guild = await bot.fetch_guild(GUILD_ID)
+		members = discord.utils.get(guild.roles, name=role).members
 
 		members = map(lambda x: (salary, x.id), members)
 		await add_salaries(members)
@@ -179,7 +180,8 @@ async def on_ready():
 	This event is called when the bot is ready.
 	"""
 	print(f'{bot.user.name} has connected to Discord!')
-	invites = await bot.fetch_guild(GUILD_ID).invites()
+	guild = await bot.fetch_guild(GUILD_ID)
+	invites = await guild.invites()
 	for invite in invites:
 		invite_map[invite.code] = invite
 	

@@ -28,7 +28,8 @@ async def on_ready():
 	"""
 	
 	print(f'{client.user.name} has connected to Discord!')
-	members = client.fetch_guild(GUILD_ID).members
+	members = await client.fetch_guild(GUILD_ID)
+	members = members.members
 	await give_roles(members)
 	await client.close()
 

@@ -140,13 +140,14 @@ async def assign_xp(bot, payload, discord_id:int, xp_amount = 0):
 		if (new_level // 10) > factor:
 			entries = ROLE_TO_ENTRIES[get_level_to_role(new_level)]
 			new = True
-			old_role = discord.utils.get(bot.fetch_guild(GUILD_ID).roles, name=get_level_to_role(level))
-			new_role = discord.utils.get(bot.fetch_guild(GUILD_ID).roles, name=get_level_to_role(new_level))
+			guild = await bot.fetch_guild(GUILD_ID)
+			old_role = discord.utils.get(guild.roles, name=get_level_to_role(level))
+			new_role = discord.utils.get(guild.roles, name=get_level_to_role(new_level))
 			if new_role:
-				await bot.fetch_guild(GUILD_ID).get_member(discord_id).add_roles(new_role)
+				await guild.get_member(discord_id).add_roles(new_role)
 				await set_role(discord_id, new_role)
 			if old_role:
-				await bot.fetch_guild(GUILD_ID).get_member(discord_id).remove_roles(old_role)
+				await guild.get_member(discord_id).remove_roles(old_role)
 			
 
 		
