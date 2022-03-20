@@ -3,8 +3,14 @@ import random
 import aiohttp
 import asyncio
 import html
+import discord
+from discord.ext import commands
+import aioredis
 
-
+intents = discord.Intents().all()
+TRIVIA_PLAYERS = set()
+bot = commands.Bot(intents=intents)
+redisClient =  aioredis.from_url('redis://localhost', port=6379, db=0)
 
 def days_to_seconds(days):
 	return days * 86400
@@ -60,7 +66,39 @@ def determine_trivia_prize():
 
 
 
+async def create_college_fn(guild, college):
+	"""
+	Create a college role for the server.
+	"""
+	if not guild:
+		guild = college['requested_by'].guild
+	
+	college_name = college['name'].rstrip().replace(' ', '-')
+	role = await guild.create_role(name=college_name, mentionable=True)
+	category = await guild.create_category(name=college_name, reason=college['reason'], position=6)
+	await category.set_permissions(role, read_messages=True, send_messages=True, connect=True, speak=True)
+	await category.set_permissions(guild.default_role, read_messages=False, connect=False)
+	await guild.create_text_channel(name=f"{college_name}-opportunities", category=category, reason=college['reason'])
+	await guild.create_text_channel(name=f"{college_name}-events", category=category, reason=college['reason'])
+	await guild.create_text_channel(name=f"{college_name}-general", category=category, reason=college['reason'])
+	
+	creator = college['requested_by']
+	len_roles = len(guild.roles)
+	await role.edit(position=(len_roles - 11))
+	await creator.add_roles(role)
+	await creator.send(f"Your new college {college_name} has been created!")
+	
+def is_valid_decimal(s):
+    try:
+        float(s)
+    except ValueError:
+        return False
+    else:
+        return True
 
+
+def build_link(chegg_id:str):
+	return f"https://botify.akose.ca/chegg/{chegg_id}"
 
 if __name__ == "__main__":
 	loop = asyncio.get_event_loop()

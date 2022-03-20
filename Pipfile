@@ -1,5 +1,5 @@
 [[source]]
-url="https://pypi.python.org/simple"
+url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
@@ -15,5 +15,22 @@ pytz = "*"
 aiohttp = "*"
 asyncio = "*"
 schedule = "*"
+redis = "*"
+APScheduler = "*"
+requests-html = "*"
+selenium = "*"
+aioredis = "*"
+asyncpg = "*"
+pyppeteer = "*"
+"backports.zoneinfo" = "*"
+gunicorn = "*"
 
 [dev-packages]
+
+[packages.Flask]
+extras = [ "async",]
+version = "*"
+
+[packages.rankcard]
+git = "https://github.com/akoses/Python-discord-rankcard.git"
+editable = true

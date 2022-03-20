@@ -1,7 +1,7 @@
 """
 	Roles and their required levels
 """
-
+import os
 ROLE_TO_LEVEL = {
 	"Chancellor": 100,
 	"President":90,
@@ -15,6 +15,21 @@ ROLE_TO_LEVEL = {
 	"Upper Year Student":10,
 	"Lower Year Student":1,
 	"Drop Out":0
+}
+
+ROLE_TO_ID = {
+
+	"Chancellor": 950211602169364480,
+	"President": 950211602865602671,
+	"Vice President": 950211603721248779,
+	"Dean": 950211604698525776,
+	"Department Head": 950211605487038504,
+	"Professor": 950211606359474217,
+	"Post Doc": 950211607760355378,
+	"Teaching Assistant": 950211608553066527,
+	"Graduate": 950211609656184863,
+	"Upper Year Student": 950211610549575701,
+	"Lower Year Student": 950211611568799764,
 }
 
 LEVEL_TO_ROLE = {
@@ -97,7 +112,10 @@ IGNORE_ROLES = {
 'Admin',
 'carl-bot',
 'muted',
-'MEE6'
+'MEE6',
+"Chegg",
+"Job Searcher",
+"DISBOARD.org",
 }
 
 
@@ -112,10 +130,7 @@ def get_level_to_role(level:int):
 	"""
 	Get the role for a given level
 	"""
-	for role, level_required in ROLE_TO_LEVEL.items():
-		if level >= level_required:
-			return role
-	return "Drop Out"
+	return LEVEL_TO_ROLE[(level // 10) * 10]
 
 
 def get_role_to_salary(role:str):
@@ -124,3 +139,15 @@ def get_role_to_salary(role:str):
 	"""
 	return ROLE_TO_SALARY[role]
 
+
+def role_or_higher(role:str):
+	"""
+	Get the array of ids for a role higher than the role specified.
+	"""
+	roles =  [id for role_l, id in ROLE_TO_ID.items() if ROLE_TO_LEVEL[role_l] >= ROLE_TO_LEVEL[role]]
+	roles.append(int(os.getenv('ADMIN_ROLE')))
+	roles.append(953367475964223569)
+	return roles
+
+if __name__ == "__main__":
+	print(role_or_higher("Upper Year Student"))
