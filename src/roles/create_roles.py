@@ -17,9 +17,11 @@ async def create_roles(client:discord.Client):
 
 	#pylint: disable=no-member
 	for role, c_values in r.ROLE_TO_COLOUR.items():
-		if role not in client.fetch_guild(GUILD_ID).roles:
+		guild = await client.fetch_guild(GUILD_ID)
+		if role not in guild.roles:
 			colour = discord.Color.from_rgb(c_values[0], c_values[1], c_values[2])
-			await client.fetch_guild(GUILD_ID).create_role(name=role, colour=colour, hoist=True)
+			guild = await client.fetch_guild(GUILD_ID)
+			await guild.create_role(name=role, colour=colour, hoist=True)
 			print(f"Created role {role}")
 
 
