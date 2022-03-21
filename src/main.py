@@ -324,6 +324,9 @@ async def on_member_join(member):
 	await insert_user(member.id)
 	invites_after_join = await member.guild.invites()
 
+	role = discord.utils.get(member.guild.roles, name="Lower Year Student")
+	await member.add_roles(role)
+
 	for invite in invite_map.values():
 		if invite:
 			if invite.uses < find_invite_by_code(invites_after_join, invite.code).uses:
@@ -331,9 +334,7 @@ async def on_member_join(member):
 			
 				await assign_xp(bot, "REFERRAL", inviter.id)
 	
-	role = discord.utils.get(member.guild.roles, name="Lower Year Student")
-	await member.add_roles(role)
-
+	
 @bot.slash_command(name="ping", description="Pong!", guild_ids=guild_ids)
 async def ping(ctx):
 	await ctx.respond('Pong!')
