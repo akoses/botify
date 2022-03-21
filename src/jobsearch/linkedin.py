@@ -28,7 +28,6 @@ async def find_jobs(job_title: str, location="Canada"):
 			link = job.find('a', {'class': 'base-card__full-link'})
 
 			if title and company and location:
-				print(title.text, company.text, location.text)
 				embed = discord.Embed(
 					title=title.text,
 					url=link.get("href"),

@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('JOB_TOKEN')
 
+
 @bot.event
 async def on_ready():
 	"""

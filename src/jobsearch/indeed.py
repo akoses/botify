@@ -6,13 +6,14 @@ sys.path.append('..')
 from utils import fetch
 import asyncio
 
-async def find_jobs(job_title: str, location="Canada"):
+async def find_jobs(job_title: str, location=None):
 
 	async with aiohttp.ClientSession() as session:
 		params = {
 			'q': job_title,
-			'l': location,
 		}
+		if location is not None:
+			params['l'] = location
 		res = await fetch(session, 'https://ca.indeed.com/jobs', params)
 		soup = BeautifulSoup(res, 'html.parser')
 		
@@ -23,7 +24,7 @@ async def find_jobs(job_title: str, location="Canada"):
 			company = job.find('span', {'class':'companyName'})
 			location = job.find('div', {'class':'companyLocation'})
 			if title and company and location:
-				print(title.text, company.text, location.text)
+				
 				embed = discord.Embed(
 					title=title.text,
 					url=f'https://ca.indeed.com{job.get("href")}',
