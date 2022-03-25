@@ -591,11 +591,10 @@ async def create_college(ctx):
 ##################################
 #Giveaway Commands 
 ##################################
-giveaway = bot.create_group(name="giveaway",
-description="Commands for running and entering giveaways")
 
+
+@bot.slash_command(name="giveaway_start", description="Start a giveaway",guild_ids=guild_ids)
 @permissions.has_role(ADMIN_ROLE)
-@giveaway.command(name="start", description="Start a giveaway",guild_ids=guild_ids)
 async def start_giveaway(ctx):
 	
 	def auth_check(m):
@@ -632,7 +631,7 @@ async def start_giveaway(ctx):
 		return
 	
 
-
+"""
 @giveaway.command(name="enter", description="Enter a giveaway", guild_ids=guild_ids)
 async def enter_giveaway(ctx, 
 	name:Option(str, "Enter the name of the giveaway",
@@ -657,7 +656,7 @@ async def enter_giveaway(ctx,
 		except Exception as e:
 			print(e)
 			await ctx.respond(f"There is no giveaway with the name {name}.")
-
+"""
 bot.run(TOKEN)
 
 
