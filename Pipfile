@@ -24,13 +24,10 @@ asyncpg = "*"
 pyppeteer = "*"
 "backports.zoneinfo" = "*"
 gunicorn = "*"
+certifi = "*"
 
 [dev-packages]
 
-[packages.Flask]
-extras = [ "async",]
-version = "*"
-
-[packages.rankcard]
-git = "https://github.com/akoses/Python-discord-rankcard.git"
-editable = true
+[packages]
+Flask = {extras = [ "async",], version = "*"}
+rankcard = {git = "https://github.com/akoses/Python-discord-rankcard.git", editable = true}
