@@ -158,9 +158,16 @@ async def check_jobs():
 					if channel:
 						channel = bot.get_channel(int(channel))
 						embed = discord.Embed(title=job.get('name'), description=job.get('description'), color=0x00ffff)
-						embed.add_field(name="Organization", value=job.get('organization'), inline=False)
-						embed.add_field(name="Location", value=job.get('location'), inline=False)
-						embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
+						organization = job.get('organization')
+						location = job.get('location')
+						disciplines = job.get('disciplines')
+						if organization is not None:
+							embed.add_field(name="Organization", value=organization, inline=False)
+						if location is not None:
+							embed.add_field(name="Location", value=location, inline=False)
+						if disciplines is not None:
+							embed.add_field(name="Disciplines", value=job.get('disciplines'), inline=False)
+						
 						embed.set_footer(text="JOB ID: %s" % job.get('id'))
 						link =  job.get('applyurl')
 						view = LinkView(link, "Apply URL")
